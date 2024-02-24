@@ -1,6 +1,16 @@
 {% extends "base.html" %} {% block title %}register{% endblock %} {% block body
 %}
 <form class="row g-3" method="POST">
+  <!-- first name -->
+  <div class="col-md-6">
+    <label for="fname" class="form-label">First Name</label>
+    <input type="text" class="form-control" id="fname" name="fname" />
+  </div>
+  <!-- last name -->
+  <div class="col-md-6">
+    <label for="lname" class="form-label">Last Name</label>
+    <input type="text" class="form-control" id="lname" name="lname" />
+  </div>
   <div class="col-md-12">
     <label for="email" class="form-label"> Email </label>
     <input type="email" class="form-control" id="email" name="email" />
@@ -14,7 +24,23 @@
     <label for="re-pwd" class="form-label">Repeat Password</label>
     <input type="password" class="form-control" id="re-pwd" name="re-pwd" />
   </div>
+  {% if roles %}
+    <div class="col-md-12">
+      <!-- dropdown -->
+      <label for="role" class="form-label">Roles</label>
+      <select id="role" class="form-select" name="role">
+        {% for role in roles %}
+          <option 
+            value="{{ role[0] }}" 
+            {% if role[0] == 3 %}selected{% endif %}
+          >
+            {{ role[1] }}
+          </option>
 
+        {% endfor %}
+      </select>
+    </div>
+  {% endif %}
   <div class="col-12">
     <button type="submit" class="btn btn-primary">Register</button>
   </div>

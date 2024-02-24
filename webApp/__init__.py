@@ -48,7 +48,14 @@ def create_app():
       user_data = cursor.fetchone()
 
       if user_data:
-          user = User(*user_data)  # Assuming User class constructor accepts **kwargs
+          user = User(
+            user_id=user_data['id'],
+            email=user_data['email'],
+            password_hash=user_data['password'],
+            status=user_data['status'],
+            role_id=user_data['role_id']
+          ) 
+          
           return user
 
       return None  # User not found
@@ -56,15 +63,3 @@ def create_app():
   app.teardown_appcontext(close_db)
 
   return app
-
-
-  # login_manager = LoginManager()
-  # login_manager.login_view = 'auth.login'
-  # login_manager.init_app(app)
-
-  # @login_manager.user_loader
-  # def load_user(id):
-  #   dbConnection = init_db()
-  #   cursor = dbConnection.cursor()
-  #   cursor.execute('SELECT * FROM users WHERE id = %s', (id,))
-  #   return cursor.fetchone()
