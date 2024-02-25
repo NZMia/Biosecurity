@@ -1,7 +1,12 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block body %}
+{% extends "layout/general_base.html" %}
+{% block title %}Home{% endblock %}
+{%block hero_text %}
 <h1>Welcome to Biosecurity</h1>
 <p>
-  This is a web application that helps in the management of pests and diseases
-  in crops.
+  Protecting the environment and the economy from the impact of pests and
+  diseases.
 </p>
+
+{% endblock %}
+{% block body %}
 {% endblock %}

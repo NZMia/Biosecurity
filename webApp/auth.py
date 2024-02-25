@@ -1,37 +1,27 @@
 from flask import Blueprint, render_template, request,flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
+from .data_operations import get_roles, get_user_by_email, create_user, create_employee
 from webApp import init_db
 from .models import User
 
 auth  = Blueprint('auth', __name__)
 
-def get_roles():
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
-  cursor.execute('SELECT * FROM roles')
-  roles = cursor.fetchall()
-  return roles
-
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
   if request.method == 'POST':
-    dbConnection = init_db()
-    cursor = dbConnection.cursor()
 
     email = request.form.get('email')
     password = request.form.get('pwd')
    
     try:
-      cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
-      user_data = cursor.fetchone()
-
+      user_data = get_user_by_email(email)
       if user_data:
-        user = User(*user_data[:-2])
-        print(user.password_hash)
-        if check_password_hash(user.password_hash, password):
-          flash('Logged in successfully!', category='success')
+        stored_password_hash = user_data[2]
+        if check_password_hash(stored_password_hash, password):
+          user = User(*user_data[:-2])          
           login_user(user, remember=True)
+          flash('Logged in successfully!', category='success')
           return redirect(url_for('authed_views.dashboard'))
         else:
           flash('Password is incorrect', category='error')
@@ -52,9 +42,6 @@ def logout():
 def register():
   if request.method == 'POST':
 
-    dbConnection = init_db()
-    cursor = dbConnection.cursor()
-
     email = request.form.get('email')
     pwd = request.form.get('pwd')
     pwd1 = request.form.get('re-pwd')
@@ -63,8 +50,8 @@ def register():
     role_id = request.form.get('role')
 
     try:
-      cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
-      user_data = cursor.fetchone()
+      # cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
+      user_data = get_user_by_email(email)
 
       if user_data:
         flash('Email already exists.', category='error')
@@ -76,17 +63,15 @@ def register():
 
         hashed_pwd = generate_password_hash(pwd)
         
-        cursor.execute('INSERT INTO users (email, password, role_id) VALUES (%s, %s, %s)', (email, hashed_pwd, role_id))
-        dbConnection.commit()
+        create_user(email, hashed_pwd, role_id)
 
         # Retrieve the newly created user
-        cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
-        user = cursor.fetchone()
+        user = get_user_by_email(email)
 
         if(user) :
-          user_id = user[0];
-          cursor.execute('INSERT INTO employee (user_id, first_name, last_name) VALUES (%s, %s, %s)', (user_id, fname, lname))
-          dbConnection.commit()
+          user_id = user[0]
+        
+          create_employee(user_id, fname, lname)
 
           login_user(User(*user[:-2]), remember=True)
           flash('Account created!', category='success')

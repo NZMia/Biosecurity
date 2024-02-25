@@ -1,17 +1,51 @@
-{% extends "base.html" %} {% block title %}Login{% endblock %} {% block body %}
-<form class="row g-3" method="POST">
-  <div class="col-md-12">
-    <label for="email" class="form-label">Email</label>
-    <input type="email" class="form-control" id="email" name="email" />
-  </div>
-  <div class="col-md-12">
-    <label for="pwd" class="form-label">Password</label>
-    <input type="password" class="form-control" id="pwd" name="pwd" />
-  </div>
+{% extends "layout/login_register_base.html" %}
+{% block title %}Login{% endblock %}
+{% block body %}
 
-  <div class="col-12">
-    <button type="submit" class="btn btn-primary">Login</button>
+<!-- Jumbotron -->
+<div class="container py-4">
+  <div class="row g-0 align-items-center">
+    <div class="col-lg-6 mb-5 mb-lg-0">
+      <video autoplay loop muted plays-inline>
+        <source src="{{ url_for('static', filename='bg.mp4') }}" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="col-lg-6 mb-5 mb-lg-0">
+      <div class="card cascading-right">
+        <div class="card-body p-5 shadow-5">
+          <h2 class="fw-bold mb-5 text-center">Login</h2>
+          <form method="POST">
+
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" />
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+              <label for="pwd" class="form-label">Password</label>
+              <input type="password" class="form-control" id="pwd" name="pwd" />
+            </div>
+
+            <div class="d-grid gap-2 mt-5">
+              <button class="btn bg-success-subtle rounded-pill" type="submit">Login</button>
+            </div>
+
+            <!-- Register buttons -->
+            <div class="text-center gap-2 mb-4">
+              <p>Not a member? <a href="/register">Register</a></p>
+              <!-- <p>Forgot password? <a href="/forgot-password">Forgot password</a></p> -->
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
-</form>
+</div>
+<!-- Jumbotron -->
+</section>
+<!-- Section: Design Block -->
 
 {% endblock %}

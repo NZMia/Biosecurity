@@ -1,0 +1,20 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}
+<!-- Title specific to this page... -->
+{% endblock %}
+
+{% block hero %}
+<div class="hero-section h-500">
+  <video autoplay loop muted plays-inline>
+    <source src="{{ url_for('static', filename='bg.mp4') }}" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  {% include 'components/nav.html' %}
+  <div class="hero-text">{% block hero_text %} {% endblock %}</div>
+</div>
+{% endblock %}
+
+{% block body %}
+<!-- Body content specific to this page... -->
+{% endblock %}
