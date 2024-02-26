@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, request,flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
-from .data_operations import get_roles, get_user_by_email, create_user, create_employee
-from webApp import init_db
+from .data_operations import get_roles, get_user_by_email, create_user, create_employee, update_user_password_by_email
 from .models import User
 
 auth  = Blueprint('auth', __name__)
@@ -86,7 +85,27 @@ def register():
   return render_template('register.html', roles=roles)
 
 
-@auth.route('/reset-password')
-# @login_required
+@auth.route('/reset-password', methods=['GET', 'POST'])
+@login_required
 def reset_password():
+  if request.method == 'POST':
+    email = request.form.get('email')
+    pwd = request.form.get('pwd')
+    pwd1 = request.form.get('re-pwd')
+
+    user = get_user_by_email(email)
+
+    if not user:
+      flash('Email does not exist.', category='error')
+    else:
+      if pwd != pwd1:
+        flash('Passwords don\'t match.', category='error')
+      elif len(pwd) < 8:
+        flash('Password must be at least 8 characters.', category='error')
+      else:
+        hashed_pwd = generate_password_hash(pwd)
+        update_user_password_by_email(email, hashed_pwd)
+        flash('Password updated!', category='success')
+        return redirect(url_for('authed_views.dashboard'))
+
   return render_template('reset_password.html')
