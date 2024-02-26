@@ -50,7 +50,6 @@ def register():
     role_id = request.form.get('role')
 
     try:
-      # cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
       user_data = get_user_by_email(email)
 
       if user_data:
@@ -85,3 +84,9 @@ def register():
       
   roles = get_roles()
   return render_template('register.html', roles=roles)
+
+
+@auth.route('/reset-password')
+# @login_required
+def reset_password():
+  return render_template('reset_password.html')

@@ -63,7 +63,10 @@ video {
   }
 }
 
-html {
+.card {
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+}
+/* html {
   position: relative;
   min-height: 100%;
 }
@@ -103,4 +106,4 @@ html {
     width: calc(100% - 230px);
     margin-left: 230px;
   }
-}
+} */

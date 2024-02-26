@@ -1,13 +1,85 @@
 {% extends 'layout/base.html' %}
 
 {% block title %}
-
+<!-- Title specific to this page... -->
 {% endblock %}
 
-{% block hero %}
-<!-- {% include 'components/nav.html' %} -->
-{% endblock %}
+{% block body%}
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+    <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+      <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+        <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+          <span class="fs-5 d-none d-sm-inline">Schools
+          </span>
+        </a>
+        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
 
-{% block body %}
-<!-- Body content specific to this page... -->
+          <!-- MANAGE PROFILE -->
+          <li>
+            <a href="#" class="nav-link px-0 align-middle">
+              <span class="ms-1 d-none d-sm-inline">Manage Profile</span>
+            </a>
+          </li>
+
+          <!-- MANAGE STAFF -->
+          <li>
+            <a href="#" class="nav-link px-0 align-middle">
+              <span class="ms-1 d-none d-sm-inline">Manage Staff</span>
+            </a>
+          </li>
+          <!-- MANAGE PEST CONTROLLER -->
+          <li>
+            <a href="#" class="nav-link px-0 align-middle">
+              <span class="ms-1 d-none d-sm-inline">Manage Pest Controller</span>
+            </a>
+          </li>
+
+          <!-- MANAGE PEST -->
+          <li>
+            <a href="#" class="nav-link px-0 align-middle">
+              <span class="ms-1 d-none d-sm-inline">Manage Pest</span>
+            </a>
+          </li>
+        </ul>
+        <hr>
+        <div class="dropdown pb-4">
+          <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+            id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="d-none d-sm-inline mx-1">
+
+              Mia Zhang
+            </span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+            <li>
+              <a class="dropdown-item" href="/">
+                Home
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/pest">
+                Pest
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/reset-password">
+                Rest Password
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col py-3">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </div>
+</div>
+
 {% endblock %}

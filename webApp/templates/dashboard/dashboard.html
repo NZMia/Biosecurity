@@ -1,0 +1,35 @@
+{% extends "layout/dashboard_base.html" %} {% block title %}dashboard{% endblock
+%} {% block content %}
+<div class="row">
+  <div class="col-sm-6">
+    {% with card_title='Admin Total', card_content='Staff Total: 100' %} {%
+    include 'components/card.html' %} {% endwith %}
+  </div>
+  <div class="col-sm-6">
+    {% with card_title='Staff Total', card_content='Staff Total: 100' %} {%
+    include 'components/card.html' %} {% endwith %}
+  </div>
+  <div class="col-sm-6">
+    {% with card_title='Pest Controller Total', card_content='Pest Controller: 100' %}
+    {% include 'components/card.html' %}
+    {% endwith %}
+  </div>
+  <div class="col-sm-6">
+    {% with card_title='Pest Total', card_content='Pest Total: 100' %} {%
+    include 'components/card.html' %} {% endwith %}
+  </div>
+</div>
+
+<div class='row'>
+  <div class="panel mb-g">
+    <div class="panel-heading">
+      <h3>Product Status</h3>
+    </div>
+    <div class="panel-body">
+      <div class="product-status">
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

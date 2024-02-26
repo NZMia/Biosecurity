@@ -2,75 +2,60 @@
 {% block title %}Login{% endblock %}
 {% block body %}
 
-<!-- Jumbotron -->
-<div class="container py-4">
-  <div class="row g-0 align-items-center">
-    <div class="col-lg-6 mb-5 mb-lg-0">
-      <video autoplay loop muted plays-inline>
-        <source src="{{ url_for('static', filename='bg.mp4') }}" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-    </div>
-    <div class="col-lg-6 mb-5 mb-lg-0">
-      <div class="card cascading-right">
-        <div class="card-body p-5 shadow-5">
-          <h2 class="fw-bold mb-5 text-center">Login</h2>
-          <form class='row g-2' method="POST">
-            <!-- first name -->
-            <div class="col-lg-6">
-              <label for="fname" class="form-label">First Name</label>
-              <input type="text" class="form-control" id="fname" name="fname" />
-            </div>
-            <!-- last name -->
-            <div class="col-lg-6">
-              <label for="lname" class="form-label">Last Name</label>
-              <input type="text" class="form-control" id="lname" name="lname" />
-            </div>
-            <div class="col-md-12">
-              <label for="email" class="form-label"> Email </label>
-              <input type="email" class="form-control" id="email" name="email" />
-            </div>
-            <div class="col-md-12">
-              <label for="pwd" class="form-label">Password</label>
-              <input type="password" class="form-control" id="pwd" name="pwd" />
-            </div>
+{% block form_title %}
+<h2 class="fw-bold mb-5 text-center">
+  Register
+</h2>
+{% endblock%}
 
-            <div class="col-md-12">
-              <label for="re-pwd" class="form-label">Repeat Password</label>
-              <input type="password" class="form-control" id="re-pwd" name="re-pwd" />
-            </div>
-            {% if roles %}
-            <div class="col-md-12">
-              <!-- dropdown -->
-              <label for="role" class="form-label">Roles</label>
-              <select id="role" class="form-select" name="role">
-                {% for role in roles %}
-                <option value="{{ role[0] }}" {% if role[0]==3 %}selected{% endif %}>
-                  {{ role[1] }}
-                </option>
-
-                {% endfor %}
-              </select>
-            </div>
-            {% endif %}
-
-            <div class="d-grid gap-2 mt-5">
-              <button class="btn bg-success-subtle rounded-pill" type="submit">Register</button>
-            </div>
-
-            <!-- Login buttons -->
-            <div class="text-center gap-2 mb-4">
-              <p>Already have an account? <a href="/login">Login</a>
-                <!-- <p>Forgot password? <a href="/forgot-password">Forgot password</a></p> -->
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+{% block form %}
+<form class='row g-2' method="POST">
+  <!-- first name -->
+  <div class="col-lg-6">
+    <label for="fname" class="form-label">First Name</label>
+    <input type="text" class="form-control" id="fname" name="fname" />
   </div>
-</div>
-<!-- Jumbotron -->
-</section>
-<!-- Section: Design Block -->
+  <!-- last name -->
+  <div class="col-lg-6">
+    <label for="lname" class="form-label">Last Name</label>
+    <input type="text" class="form-control" id="lname" name="lname" />
+  </div>
+  <div class="col-md-12">
+    <label for="email" class="form-label"> Email </label>
+    <input type="email" class="form-control" id="email" name="email" />
+  </div>
+  <div class="col-md-12">
+    <label for="pwd" class="form-label">Password</label>
+    <input type="password" class="form-control" id="pwd" name="pwd" />
+  </div>
 
+  <div class="col-md-12">
+    <label for="re-pwd" class="form-label">Repeat Password</label>
+    <input type="password" class="form-control" id="re-pwd" name="re-pwd" />
+  </div>
+  {% if roles %}
+  <div class="col-md-12">
+    <!-- dropdown -->
+    <label for="role" class="form-label">Roles</label>
+    <select id="role" class="form-select" name="role">
+      {% for role in roles %}
+      <option value="{{ role[0] }}" {% if role[0]==3 %}selected{% endif %}>
+        {{ role[1] }}
+      </option>
+
+      {% endfor %}
+    </select>
+  </div>
+  {% endif %}
+
+  <div class="d-grid gap-2 mt-5">
+    <button class="btn bg-success-subtle rounded-pill" type="submit">Register</button>
+  </div>
+
+  <!-- Login buttons -->
+  <div class="text-center gap-2 mb-4">
+    <p>Already have an account? <a href="/login">Login</a>
+      <!-- <p>Forgot password? <a href="/forgot-password">Forgot password</a></p> -->
+  </div>
+</form>
 {% endblock %}
