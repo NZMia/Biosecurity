@@ -1,57 +1,102 @@
-{% extends "layout/dashboard_base.html" %} {% block title %}dashboard{% endblock
-%} {% block content %}
+{% extends "layout/dashboard_base.html" %}
+{% block title %}dashboard{% endblock %}
+{% import 'components/card.html' as macros %}
+
+{% block content %}
 <div class="row">
-  <div class="col-sm-6">
-    {% with card_title='Admin Total', card_content='Staff Total: 100' %} {%
-    include 'components/card.html' %} {% endwith %}
+  <div class="mt-4 mb-4">
+    <h3>Welcome Back {{ user_info.first_name }} {{ user_info.last_name }}</h3>
   </div>
-  <div class="col-sm-6">
-    {% with card_title='Staff Total', card_content='Staff Total: 100' %} {%
-    include 'components/card.html' %} {% endwith %}
+</div>
+
+<div class="row">
+  <div class="col-xl-3 col-sm-6">
+    {% call macros.card('admin', 'card-left-border-green') %}
+    <p>{{ admin_len }}</p>
+    {% endcall %}
   </div>
-  <div class="col-sm-6">
-    {% with card_title='Pest Controller Total', card_content='Pest Controller: 100' %}
-    {% include 'components/card.html' %}
-    {% endwith %}
+  <div class="col-xl-3 col-sm-6">
+    {% call macros.card('admin', 'card-left-border-red') %}
+    <p>{{ admin_len }}</p>
+    {% endcall %}
   </div>
-  <div class="col-sm-6">
-    {% with card_title='Pest Total', card_content='Pest Total: 100' %} {%
-    include 'components/card.html' %} {% endwith %}
+  <div class="col-xl-3 col-sm-6">
+    {% call macros.card('staff', 'card-left-border-yellow') %}
+    <p>{{ employ_len }}</p>
+    {% endcall %}
+  </div>
+  <div class="col-xl-3 col-sm-6">
+    {% call macros.card('pest controller', 'card-left-border-blue') %}
+    <p>{{ controller_len }}</p>
+    {% endcall %}
   </div>
 </div>
 
 <div class='row'>
   <div class="panel mb-g">
-    <div class="panel-heading">
-      <h3>Product Status</h3>
-    </div>
     <div class="panel-body">
-      <div class="product-status">
-        <p>
-          admin: {{ admin_len }}
-        </p>
-        <p>
-          employee: {{ employ_len }}
-        </p>
-        <p>
-          controller: {{ controller_len }}
-        </p>
-        <p>
-          user_info: {{ user_info }}
-
-        </p>
-
-        <p>
-          admin: 3
-
-          employee: 1
-
-          controller: 0
-
-          user_info: {'id': 2, 'user_id': 2, 'position_id': None, 'department_id': None, 'first_name': 'admin',
-          'last_name': 'zhang', 'work_phone': None, 'hired_at': datetime.date(2024, 2, 25)}
-        </p>
+      {% call macros.card('Personal Info') %}
+      <div class="content">
+        {{ user_info }}
       </div>
+      <form>
+        <div class="row mb-3">
+          <label for="email" class="col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-10">
+            <input type="email" readonly class="form-control-plaintext" id="email" value={{"miazhang@gmail.com"}}>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="role" class="col-sm-2 col-form-label">Role</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="role" value={{"adminstration"}}>
+          </div>
+        </div>
+        <fieldset class="row mb-3">
+          <legend class="col-form-label col-sm-2 pt-0">Pesrsonal Details</legend>
+          <div class="col-sm-10">
+            <div class="mb-3">
+              <label for="fname" class="col-sm-2 col-form-label">First Name</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="fname" value={{ user_info.first_name }}>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="fname" class="col-sm-2 col-form-label">Last Name</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="fname" value={{ user_info.last_name }}>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="fname" class="col-sm-2 col-form-label">Position</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="fname" value={{ user_info.position_id }}>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="fname" class="col-sm-2 col-form-label">Department</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="fname" value={{ user_info.department_id }}>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="fname" class="col-sm-2 col-form-label">Work Phone</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="fname" value={{ user_info.work_phone }}>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="fname" class="col-sm-2 col-form-label">Hire Date</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control-plaintext" id="fname" value={{ user_info.hired_at }} readonly>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Update Information</button>
+        <a href="/reset-password">Rest Password</a>
+      </form>
+      {% endcall %}
     </div>
   </div>
 </div>

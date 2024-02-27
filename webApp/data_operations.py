@@ -1,7 +1,5 @@
 from webApp import init_db
 from flask_login import current_user
-# from werkzeug.security import generate_password_hash, check_password_hash
-# from .models import User
 
 def create_user(email, password, role_id):
   dbConnection = init_db()
@@ -41,10 +39,44 @@ def get_user_info_by_user_id():
   user_id = current_user.id
   role_id = current_user.role_id
 
+
   if role_id != 3:
-    cursor.execute('SELECT * FROM  employee  WHERE user_id = %s', (user_id,))
+    query = """
+      SELECT 
+          users.email AS user_email,
+          role.role AS user_role,
+          employee.*
+      FROM 
+          employee
+      JOIN 
+          user ON employee.user_id = %s
+      JOIN 
+          role ON users.role_id = role_id
+      WHERE 
+          user.id = %s;
+    """
   else:
-    cursor.execute('SELECT * FROM pest_controller WHERE user_id = %s', (user_id,))
+    query = """
+      SELECT 
+          users.email AS user_email,
+          role.role AS user_role,
+          pest_controller.*
+      FROM 
+          pest_controller
+      JOIN 
+          user ON pest_controller.user_id = users.id
+      JOIN 
+          role ON users.role_id = %s
+      WHERE 
+          user.id = %s;
+    """
+  
+  cursor.execute(query, (role_id, user_id))
+
+  # if role_id != 3:
+  #   cursor.execute('SELECT * FROM  employee  WHERE user_id = %s', (user_id,))
+  # else:
+  #   cursor.execute('SELECT * FROM pest_controller WHERE user_id = %s', (user_id,))
   user_info = cursor.fetchone()
 
   # Fetch column names

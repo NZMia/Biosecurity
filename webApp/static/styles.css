@@ -16,6 +16,10 @@
 .h-150 {
   height: 150px;
 }
+.top-0 {
+  top: 0;
+}
+
 .hero-text {
   position: absolute;
   color: white;
@@ -65,6 +69,39 @@ video {
 
 .card {
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card-green {
+  background: #d1e7dd;
+  color: #198754;
+}
+.card-left-border-blue {
+  border-left: 5px solid #007bff;
+}
+.card-left-border-yellow {
+  border-left: 5px solid #ffc107;
+}
+.card-left-border-green {
+  border-left: 5px solid #198754;
+}
+.card-left-border-red {
+  border-left: 5px solid #dc3545;
+}
+/* h1 {
+  color: #198754;
+} */
+.card-left-border- {
+  border-left: 5px solid #007bff;
+  color: #0d6efd;
+  color: #6610f2;
+  color: #6f42c1;
+  color: #d63384;
+  color: #dc3545;
+  color: #fd7e14;
+  color: #ffc107;
+  color: #198754;
+  color: #20c997;
+  color: #0dcaf0;
 }
 /* html {
   position: relative;

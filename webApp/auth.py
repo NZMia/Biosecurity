@@ -90,6 +90,7 @@ def register():
 def reset_password():
   if request.method == 'POST':
     email = request.form.get('email')
+    old_pwd = request.form.get('old-pwd')
     pwd = request.form.get('pwd')
     pwd1 = request.form.get('re-pwd')
 
@@ -98,6 +99,8 @@ def reset_password():
     if not user:
       flash('Email does not exist.', category='error')
     else:
+      if not check_password_hash(user[2], old_pwd):
+        flash('current password is incorrect.', category='error')
       if pwd != pwd1:
         flash('Passwords don\'t match.', category='error')
       elif len(pwd) < 8:
