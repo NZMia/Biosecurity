@@ -26,6 +26,20 @@ def get_roles():
   roles = cursor.fetchall()
   return roles
 
+def get_positions():
+  dbConnection = init_db()
+  cursor = dbConnection.cursor()
+  cursor.execute('SELECT * FROM positions')
+  positions = cursor.fetchall()
+  return positions
+
+def get_departments():
+  dbConnection = init_db()
+  cursor = dbConnection.cursor()
+  cursor.execute('SELECT * FROM departments')
+  departments = cursor.fetchall()
+  return departments
+
 def get_employees_by_role(role_id):
   dbConnection = init_db()
   cursor = dbConnection.cursor()
@@ -44,39 +58,47 @@ def get_user_info_by_user_id():
     query = """
       SELECT 
           users.email AS user_email,
-          role.role AS user_role,
+          roles.role AS user_role,
+          departments.department AS department,
+          positions.position AS position,
           employee.*
       FROM 
           employee
       JOIN 
-          user ON employee.user_id = %s
+          users ON employee.user_id = users.id
       JOIN 
-          role ON users.role_id = role_id
-      WHERE 
-          user.id = %s;
+          roles ON users.role_id = roles.id
+      LEFT JOIN 
+          positions ON employee.position_id = positions.id
+      LEFT JOIN 
+          departments ON employee.department_id = departments.id
+      WHERE
+          users.id = %s
+      AND
+          roles.id = %s;
     """
   else:
     query = """
       SELECT 
           users.email AS user_email,
-          role.role AS user_role,
+          roles.role AS user_role,
+          departments.department AS department,
+          positions.position AS position,
           pest_controller.*
       FROM 
           pest_controller
       JOIN 
           user ON pest_controller.user_id = users.id
       JOIN 
-          role ON users.role_id = %s
+          roles ON users.role_id = roles.id
       WHERE 
+          users.id = %s
+      AND
           user.id = %s;
     """
   
   cursor.execute(query, (role_id, user_id))
 
-  # if role_id != 3:
-  #   cursor.execute('SELECT * FROM  employee  WHERE user_id = %s', (user_id,))
-  # else:
-  #   cursor.execute('SELECT * FROM pest_controller WHERE user_id = %s', (user_id,))
   user_info = cursor.fetchone()
 
   # Fetch column names
