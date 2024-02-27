@@ -14,7 +14,7 @@
   <div class="row m-5">
     <div class="col-md-4 col-sm-12">
       <h1>Biosecurity</h1>
-      <hr class="border border-success border-3 opacity-75">
+      <hr class="border border-success border-3 opacity-75 w-25">
       <p>your trusted source for biosecurity information and resources</p>
     </div>
     <div class="col-md-8 col-sm-12">
@@ -48,14 +48,66 @@
     </div>
   </div>
 
-  <div class="row d-flex-align-items-center m-5 bg-light-subtle">
-    <div class="w-auto">
-      <h3>Join Us</h3>
+  <div class="row d-flex flex-column justify-content-center align-items-center m-5 text-center">
+    <div class="col-xl-4 col-lg-6 col-md-8">
+      <h2>Join Us</h2>
+      <hr class="border border-success border-3 opacity-75">
       <p>
         Join us to access all the resources and information on biosecurity.
       </p>
     </div>
-    <button type="button" class="btn btn-outline-success rounded-pill">Join Us To View All Resource</button>
+    <div class="col-md-4 col-sm-6">
+      <a class="btn btn-success rounded-pill p-3" href='/login'>
+        Join Us To View All Resource
+      </a>
+    </div>
+  </div>
+
+  <div class="row mt-5 md-5 d-flex justify-content-around">
+    <div class="col-md-3 col-sm-12">
+      <h3>Teams</h3>
+      <hr class="border border-success border-3 opacity-75 w-25">
+      <p>We are a non-profit organization, but we offer professional services</p>
+    </div>
+    <div class=" row col-md-8 col-sm-12">
+      <div class="col-md-6 col-sm-6">
+        {% call macros.card('', '') %}
+        <h5 class='text-success mt-3 mb-3'>Pest Controller</h5>
+        <!-- <hr class="border border-success border-2 opacity-75 w-3"> -->
+        <p>
+          Pest controllers can access our resources to view all pests
+        </p>
+        {% endcall %}
+      </div>
+      <div class="col-md-6 col-sm-6">
+        {% call macros.card('', '') %}
+        <h5 class='text-success mt-3 mb-3'>Staff</h5>
+        <!-- <hr class="border border-success border-2 opacity-75 w-3"> -->
+        <p>
+          Staff can access our resources to view all pests and update their details
+        </p>
+        {% endcall %}
+      </div>
+      <div class="col-md-6 col-sm-6">
+        {% call macros.card('', '') %}
+        <h5 class='text-success mt-3 mb-3'>Admin</h5>
+        <!-- <hr class="border border-success border-2 opacity-75 w-3"> -->
+        <p>
+          Admin can access our resources to view all resources and update their details
+        </p>
+        {% endcall %}
+      </div>
+      <div class="col-md-6 col-sm-6">
+        {% call macros.card('', '') %}
+        <h5 class='text-success mt-3 mb-3'>Biosecurity Specialist</h5>
+        <!-- <hr class="border border-success border-2 opacity-75 w-3"> -->
+        <p>
+          Technical support and and proofreading of all resources
+        </p>
+
+        {% endcall %}
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}

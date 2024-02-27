@@ -5,6 +5,7 @@ from .models import User
 
 authed_views  = Blueprint('authed_views', __name__)
 
+# DASHBAORD
 @authed_views.route('/dashboard')
 @login_required
 def dashboard():
@@ -36,14 +37,14 @@ def dashboard():
     positions=positions
   )
 
-# @authed_views.route('/update_profile')
-# @login_required
-# def update_profile():
-#   current_user_info = get_user_info_by_user_id()
-#   return render_template('dashboard/update_profile.html',user=current_user_info)
-
 @authed_views.route('/manage_staff')
 @login_required
 def manage_staff():
   employees = get_employees_by_role(1)
   return render_template('dashboard/manage_staff.html', employees=employees)
+
+# PEST
+@authed_views.route('/pest')
+# @login_required
+def pest():
+  return render_template('pest/index.html')

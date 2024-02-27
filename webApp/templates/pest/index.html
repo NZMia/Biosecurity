@@ -1,0 +1,52 @@
+{% extends "layout/general_base.html" %}
+{% import 'components/card.html' as macros %}
+{% block title %}PESTS{% endblock %}
+{%block hero_text %}
+<h1>Welcome to Join Us</h1>
+<p>
+
+</p>
+{% endblock %}
+{% block body %}
+<div class="container">
+  <div class="row m-5">
+    <div class="col-md-3 col-sm-6">
+      {% call macros.card('Possum', 'card-left-border-green',
+      'https://web.archive.org/web/20230127195759im_/https://www.pestdetective.org.nz/assets/Uploads/Culprits/Possum-1-500x500.jpg')
+      %}
+      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+        content.</p>
+      <a href="#" class="btn btn-outline-success">View Details</a>
+      {% endcall %}
+    </div>
+    <div class="col-md-3 col-sm-6">
+      {% call macros.card('Possum', 'card-left-border-green',
+      'https://web.archive.org/web/20230127195759im_/https://www.pestdetective.org.nz/assets/Uploads/Culprits/Possum-1-500x500.jpg')
+      %}
+      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+        content.</p>
+      <a href="#" class="btn btn-outline-success">View Details</a>
+      {% endcall %}
+    </div>
+    <div class="col-md-3 col-sm-6">
+      {% call macros.card('Possum', 'card-left-border-green',
+      'https://web.archive.org/web/20230127195759im_/https://www.pestdetective.org.nz/assets/Uploads/Culprits/Possum-1-500x500.jpg')
+      %}
+      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+        content.</p>
+      <a href="#" class="btn btn-outline-success">View Details</a>
+      {% endcall %}
+    </div>
+    <div class="col-md-3 col-sm-6">
+      {% call macros.card('Rabbit', 'card-left-border-green',
+      'https://web.archive.org/web/20220122171509im_/http://www.pestdetective.org.nz/assets/Uploads/Culprits/Rabbit-1-500x500.jpg')
+      %}
+      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+        content.</p>
+      <a href="#" class="btn btn-outline-success">View Details</a>
+      {% endcall %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
