@@ -90,6 +90,16 @@ video {
 .card-left-border-red {
   border-left: 5px solid #dc3545;
 }
+.btn-icon-edit {
+  border: none;
+  background: none;
+  color: #198754;
+}
+.btn-icon-delete {
+  border: none;
+  background: none;
+  color: #dc3545;
+}
 /* h1 {
   color: #198754;
 } */

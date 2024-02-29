@@ -29,11 +29,11 @@ def create_app():
 
   from .auth import auth
   from .non_authed_views import non_authed_views
-  from .authed_views import authed_views
+  from .dashboards import dashboards
 
   app.register_blueprint(auth, url_prefix='/')
   app.register_blueprint(non_authed_views, url_prefix='/')
-  app.register_blueprint(authed_views, url_prefix='/')
+  app.register_blueprint(dashboards, url_prefix='/')
 
   login_manager = LoginManager()
   login_manager.login_view = 'auth.login'

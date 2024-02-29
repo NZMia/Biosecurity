@@ -1,10 +1,53 @@
 from flask import Blueprint, render_template, request,flash, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
-from .data_operations import get_roles, get_user_by_email, create_user, create_employee, update_user_password_by_email
+from .data_operations import get_roles, get_user_by_email, create_user, update_user_password_by_email
 from .models import User
 
 auth  = Blueprint('auth', __name__)
+
+def create_new_user(
+    email, 
+    pwd, 
+    pwd1, 
+    role_id, 
+    first_name, 
+    last_name, 
+    address, 
+    phone, 
+    work_phone, 
+    department_id, 
+    position_id):
+  user = get_user_by_email(email)
+
+  try:
+    if user:
+      flash('Email already exists.', category='error')
+    elif len(pwd) < 8:
+      flash('Password must be at least 8 characters.', category='error')
+    elif pwd != pwd1:
+      flash('Passwords don\'t match.', category='error')
+    else:
+      hashed_pwd = generate_password_hash(pwd)
+      create_user(
+        email=email,
+        password=hashed_pwd,
+        role_id=role_id,
+        department_id=department_id,
+        position_id=position_id,
+        first_name=first_name,
+        last_name=last_name,
+        address=address,
+        work_phone=work_phone,
+        phone=phone
+      )
+
+      flash('Account created!', category='success')
+      return True
+  except Exception as e:
+    flash('Account creation failed: {e}', category='error')
+    return False
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -21,7 +64,7 @@ def login():
           user = User(*user_data[:-2])          
           login_user(user, remember=True)
           flash('Logged in successfully!', category='success')
-          return redirect(url_for('authed_views.dashboard'))
+          return redirect(url_for('dashboards.dashboard'))
         else:
           flash('Password is incorrect', category='error')
       else:
@@ -48,35 +91,36 @@ def register():
     lname = request.form.get('lname')
     role_id = request.form.get('role')
 
+
     try:
-      user_data = get_user_by_email(email)
+      # Create new user
+      create_new_user(
+          email=email,
+          pwd=pwd,
+          pwd1=pwd1,
+          role_id=role_id,
+          first_name=fname,
+          last_name=lname,
+          address=None,  # Set default or adjust as needed
+          phone=None,  # Set default or adjust as needed
+          work_phone=None,  # Set default or adjust as needed
+          department_id=None,  # Set default or adjust as needed
+          position_id=None,  # Set default or adjust as needed
+      )
+    
+      # Retrieve the newly created user
+      user = get_user_by_email(email)
 
-      if user_data:
-        flash('Email already exists.', category='error')
-      elif pwd != pwd1:
-        flash('Passwords don\'t match.', category='error')
-      elif len(pwd) < 8:
-        flash('Password must be at least 8 characters.', category='error')
+      if(user) :
+        user_id = user[0]
+      
+
+        login_user(User(*user[:-2]), remember=True)
+        flash('Account created!', category='success')
+
+        return redirect(url_for('dashboards.dashboard'))
       else:
-
-        hashed_pwd = generate_password_hash(pwd)
-        
-        create_user(email, hashed_pwd, role_id)
-
-        # Retrieve the newly created user
-        user = get_user_by_email(email)
-
-        if(user) :
-          user_id = user[0]
-        
-          create_employee(user_id, fname, lname)
-
-          login_user(User(*user[:-2]), remember=True)
-          flash('Account created!', category='success')
-
-          return redirect(url_for('authed_views.dashboard'))
-        else:
-          flash('Account created please login.', category='error')
+        flash('Account created please login.', category='error')
     except Exception as e:
       print(e)
       flash('Account creation failed: {e}', category='error')
@@ -109,6 +153,6 @@ def reset_password():
         hashed_pwd = generate_password_hash(pwd)
         update_user_password_by_email(email, hashed_pwd)
         flash('Password updated!', category='success')
-        return redirect(url_for('authed_views.dashboard'))
+        return redirect(url_for('dashboards.dashboard'))
 
   return render_template('reset_password.html')

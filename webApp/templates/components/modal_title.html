@@ -1,0 +1,5 @@
+{% macro modal_title(id='', class_name='', header_target='') -%}
+<button class="{{ class_name }}" data-bs-toggle="modal" data-bs-target="#modal-{{ id }}">
+  {{ caller() }}
+</button>
+{%- endmacro %}

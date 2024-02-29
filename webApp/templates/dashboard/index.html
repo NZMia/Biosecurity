@@ -1,7 +1,12 @@
 {% extends "layout/dashboard_base.html" %}
-{% block title %}dashboard{% endblock %}
+
+{% import 'components/form_field.html' as macross %}
 {% import 'components/card.html' as macros %}
 
+
+{% block title %}
+dashboard
+{% endblock %}
 {% block content %}
 <div class="row">
   <div class="mt-4 mb-4">
@@ -37,79 +42,26 @@
     <div class="panel-body">
       {% call macros.card('Personal Info') %}
 
-      <form>
-        <div class="row mb-3">
-          <label for="email" class="col-sm-2 col-form-label">Email</label>
-          <div class="col-sm-10">
-            <input type="email" readonly class="form-control-plaintext" id="email" value={{ user_info.user_email }}>
-          </div>
-        </div>
-        <div class="row mb-3">
-          <label for="role" class="col-sm-2 col-form-label">Role</label>
-          <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="role" value={{ user_info.user_role }}>
-          </div>
-        </div>
+      <form method='POST'>
+        {{ macross.form_field('Email', 'email', 'email', user_info.user_email, readonly=true) }}
+        {{ macross.form_field('Role', 'role', 'text', user_info.user_role, readonly=true) }}
+
         <fieldset class="row mb-3">
           <legend class="col-form-label col-sm-2 pt-0">Personal Details</legend>
           <div class="col-sm-10">
-            <div class="mb-3">
-              <label for="fname" class="col-sm-2 col-form-label">First Name</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="fname" value={{ user_info.first_name }}>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="fname" class="col-sm-2 col-form-label">Last Name</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="fname" value={{ user_info.last_name }}>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="fname" class="col-sm-2 col-form-label">Department</label>
-              <div class="col-sm-10">
-                <select class="form-select" name='department'>
-                  <option value="" {% if not user_info.department_id %}selected{% endif %}>
-                    Open this select menu
-                  </option>
-                  {% for department in departments %}
-                  <option value="{{ department[0] }}" {% if user_info.department_id==department.id %}selected{% endif
-                    %}>{{ department[1] }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="fname" class="col-sm-2 col-form-label">Position</label>
-              <div class="col-sm-10">
-                <select class="form-select" name='position'>
-                  <option value="" {% if not user_info.position_id %}selected{% endif %}>
-                    Open this select menu
-                  </option>
-                  {% for position in positions %}
-                  <option value="{{ position[0] }}" {% if user_info.position_id==position.id %}selected{% endif %}>{{
-                    position[1] }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="fname" class="col-sm-2 col-form-label">Work Phone</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="fname" value={{ user_info.work_phone }}>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="fname" class="col-sm-2 col-form-label">Hire Date</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control-plaintext" id="fname" value={{ user_info.hired_at }} readonly>
-              </div>
-            </div>
+            {{ macross.form_field('First Name', 'fname', 'text', user_info.first_name) }}
+            {{ macross.form_field('Last Name', 'lname', 'text', user_info.last_name) }}
+            {{ macross.form_field('Department', 'department', 'select', user_info.department_id, options=departments) }}
+            {{ macross.form_field('Position', 'position', 'select', user_info.position_id, options=positions) }}
+            {{ macross.form_field('Work Phone', 'wphone', 'text', user_info.work_phone) }}
+            {{ macross.form_field('Hire Date', 'hdate', 'text', user_info.hired_at, readonly=true) }}
           </div>
         </fieldset>
+
         <button type="submit" class="btn btn-primary">Update Information</button>
-        <a href="/reset-password">Rest Password</a>
+        <a href="/reset-password">Reset Password</a>
       </form>
+
       {% endcall %}
     </div>
   </div>

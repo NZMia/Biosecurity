@@ -3,19 +3,19 @@
 {% import 'components/modal_title.html'as macros %}
 {% import 'components/modal.html' as components %}
 
-{% block title %}
-dashboard {% endblock%} {% block content %}
-<!-- ADD A NEW USER -->
+{% block title %} dashboard {% endblock%}
+{% block content %}
+
 <div class="container mt-5">
   <div class="row">
     <div class="col-12">
-      <h3>Manage Staff</h3>
+      <h3>Manage Pest Controller</h3>
     </div>
   </div>
   <div class="row">
     <div class="col-12">
       {% call macros.modal_title('add_modal','btn-icon-edit', 'test')%}
-      Add Staff
+      Add Pest Controller
       {% endcall %}
     </div>
     <div class="container mt-5 table-responsive">
@@ -24,17 +24,16 @@ dashboard {% endblock%} {% block content %}
           <tr>
             <th>Username</th>
             <th>Email</th>
-            <th>Work Phone</th>
-            <th>Department</th>
-            <th>Position</th>
+            <th>Phone</th>
+            <th>Address</th>
             <th>Role</th>
-            <th>Hire Date</th>
+            <th>Joined Date</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <!-- Sample data, replace with actual staff information -->
-          {% for employee in employees %}
+          {% for employee in %}
           <tr>
             <td>{{ employee.first_name}} {{ employee.last_name }} {{ employee.user_id }}</td>
             <td>{{ employee.email }}</td>
@@ -114,9 +113,8 @@ dashboard {% endblock%} {% block content %}
         {{ macro.form_field('Role', 'role_id', 'select', '', options=roles) }}
         {{ macro.form_field('First Name', 'fname', 'text', '') }}
         {{ macro.form_field('Last Name', 'lname', 'text', '') }}
-        {{ macro.form_field('Department', 'department_id', 'select', '', options=departments)}}
-        {{ macro.form_field('Position', 'position_id', 'select', '', options=positions) }}
-        {{ macro.form_field('Work Phone', 'wphone', 'text', '') }}
+        {{ macro.form_field('Phone', 'phone', 'textarea', '', '')}}
+        {{ macro.form_field('Address', 'address', 'textarea', '', '')}}
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Cancel
