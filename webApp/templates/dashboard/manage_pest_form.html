@@ -1,0 +1,75 @@
+<div class="container mt-5">
+  <h2 class="mb-4">Pests Form</h2>
+
+  <form action="/submit-pest" method="post" enctype="multipart/form-data">
+
+    <!-- Common Name -->
+    <div class="mb-3">
+      <label for="commonName" class="form-label">Common Name</label>
+      <input type="text" class="form-control" id="commonName" name="commonName" required>
+    </div>
+
+    <!-- Scientific Name -->
+    <div class="mb-3">
+      <label for="scientificName" class="form-label">Scientific Name</label>
+      <input type="text" class="form-control" id="scientificName" name="scientificName" required>
+    </div>
+
+    <!-- Description -->
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+    </div>
+
+    <!-- Distinctive Features -->
+    <div class="mb-3">
+      <label for="distinctiveFeatures" class="form-label">Distinctive Features</label>
+      <textarea class="form-control" id="distinctiveFeatures" name="distinctiveFeatures" rows="3" required></textarea>
+    </div>
+
+    <!-- Size -->
+    <div class="mb-3">
+      <label for="size" class="form-label">Size</label>
+      <input type="text" class="form-control" id="size" name="size" required>
+    </div>
+
+    <!-- Droppings -->
+    <div class="mb-3">
+      <label for="droppings" class="form-label">Droppings</label>
+      <textarea class="form-control" id="droppings" name="droppings" rows="3" required></textarea>
+    </div>
+
+    <!-- Footprints -->
+    <div class="mb-3">
+      <label for="footprints" class="form-label">Footprints</label>
+      <textarea class="form-control" id="footprints" name="footprints" rows="3" required></textarea>
+    </div>
+
+    <!-- Distribution -->
+    <div class="mb-3">
+      <label for="distribution" class="form-label">Distribution</label>
+      <textarea class="form-control" id="distribution" name="distribution" rows="3" required></textarea>
+    </div>
+
+    <!-- Impacts -->
+    <div class="mb-3">
+      <label for="impacts" class="form-label">Impacts</label>
+      <textarea class="form-control" id="impacts" name="impacts" rows="3" required></textarea>
+    </div>
+
+    <!-- Control Methods -->
+    <div class="mb-3">
+      <label for="controlMethods" class="form-label">Control Methods</label>
+      <textarea class="form-control" id="controlMethods" name="controlMethods" rows="3" required></textarea>
+    </div>
+
+    <!-- Image Upload -->
+    <div class="mb-3">
+      <label for="image" class="form-label">Upload Image</label>
+      <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-success">Submit</button>
+
+  </form>

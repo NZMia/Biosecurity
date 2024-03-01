@@ -91,7 +91,6 @@ def register():
     lname = request.form.get('lname')
     role_id = request.form.get('role')
 
-
     try:
       # Create new user
       create_new_user(
@@ -112,15 +111,12 @@ def register():
       user = get_user_by_email(email)
 
       if(user) :
-        user_id = user[0]
-      
-
         login_user(User(*user[:-2]), remember=True)
         flash('Account created!', category='success')
 
         return redirect(url_for('dashboards.dashboard'))
       else:
-        flash('Account created please login.', category='error')
+        flash('Oppos failed.', category='error')
     except Exception as e:
       print(e)
       flash('Account creation failed: {e}', category='error')

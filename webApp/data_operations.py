@@ -8,9 +8,9 @@ def create_user(**kwargs):
     INSERT INTO users (email, password, role_id)
     VALUES (%s, %s, %s)
   """
-  email = kwargs['email']
-  password = kwargs['password']
-  role_id = kwargs['role_id']
+  email = kwargs.get('email')
+  password = kwargs.get('password')
+  role_id = kwargs.get('role_id')
 
   # INSERT INTO users table
   cursor.execute(user_query, (email, password, role_id))
@@ -25,20 +25,22 @@ def create_user(**kwargs):
   phone = kwargs.get('phone', None)
 
   # INSERT INTO employee table
-  if role_id != 3:
+  print(type(role_id))
+
+  if role_id != 3 and role_id != '3':
     employee_query = """
       INSERT INTO employee (user_id, department_id, position_id, first_name, last_name, work_phone)
       VALUES (%s, %s, %s, %s, %s, %s)
     """
     cursor.execute(employee_query, (user_id, department_id, position_id, first_name, last_name, work_phone))
-
-  # INSERT INTO pest_controller table
+  # INSERT INTO customer table
   else:
-    pest_controller_query = """
-      INSERT INTO pest_controller (user_id, first_name, last_name， address, phone)
+    customer_query = """
+      INSERT INTO customer (user_id, first_name, last_name, address, phone)
       VALUES (%s, %s, %s, %s, %s)
     """
-    cursor.execute(pest_controller_query, (user_id, first_name, last_name, address, phone))
+    cursor.execute(customer_query, (user_id, first_name, last_name, address, phone))
+
   dbConnection.commit()
 
 def get_roles():
@@ -101,8 +103,9 @@ def get_employees_by_role(role_id):
   return employees
 
 def get_user_info_by_user_id():
+
   dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  cursor = dbConnection.cursor(dictionary=True)
   user_id = current_user.id
   role_id = current_user.role_id
 
@@ -134,38 +137,57 @@ def get_user_info_by_user_id():
       SELECT 
           users.email AS user_email,
           roles.role AS user_role,
-          departments.department AS department,
-          positions.position AS position,
-          pest_controller.*
+          customer.*
       FROM 
-          pest_controller
+          customer
       JOIN 
-          user ON pest_controller.user_id = users.id
+          user ON customer.user_id = users.id
       JOIN 
           roles ON users.role_id = roles.id
       WHERE 
           users.id = %s
       AND
-          user.id = %s;
+          roles.id = %s;
     """
   
-  cursor.execute(query, (role_id, user_id))
+  cursor.execute(query, (user_id, role_id))
 
   user_info = cursor.fetchone()
+  print(user_info)
+  # # Fetch column names
+  # column_names = [desc[0] for desc in cursor.description]
 
-  # Fetch column names
-  column_names = [desc[0] for desc in cursor.description]
+  # # Create a dictionary with column names as keys and values from the tuple
+  # user_info_dict = dict(zip(column_names, user_info))
+  return user_info
 
-  # Create a dictionary with column names as keys and values from the tuple
-  user_info_dict = dict(zip(column_names, user_info))
-  return user_info_dict
-
-def get_pest_controllers():
+def get_customers():
   dbConnection = init_db()
   cursor = dbConnection.cursor()
-  cursor.execute('SELECT * FROM pest_controller')
-  pest_controllers = cursor.fetchall()
-  return pest_controllers
+  query = """
+    SELECT 
+      customer.*,
+      users.email AS email,
+      roles.role AS role
+    FROM 
+      customer
+    JOIN users ON customer.user_id = users.id
+    JOIN roles ON users.role_id = roles.id
+    WHERE 
+      users.status = 'ACTIVE'
+  """
+  cursor.execute(query)
+  # Fetch all rows as tuples
+  customers_tuples = cursor.fetchall()
+  # Get column names
+  column_names = [desc[0] for desc in cursor.description]
+  # Convert each tuple to a dictionary using column names
+  customers_dict_list = [
+      dict(zip(column_names, customer))
+      for customer in customers_tuples
+  ]
+
+  return customers_dict_list
 
 def get_user_by_email(email):
   dbConnection = init_db()
@@ -177,6 +199,7 @@ def get_user_by_email(email):
 def update_user_password_by_email(email, password):
   dbConnection = init_db()
   cursor = dbConnection.cursor()
+  
   cursor.execute('UPDATE users SET password = %s WHERE email = %s', (password, email))
   dbConnection.commit()
 
@@ -191,36 +214,28 @@ def update_employee_by_id(employee_id, **kwargs):
       LEFT JOIN positions ON employee.position_id = positions.id
       LEFT JOIN departments ON employee.department_id = departments.id
       SET 
-          employee.department_id = COALESCE(%s, employee.department_id),
-          employee.position_id = COALESCE(%s, employee.position_id),
-          employee.first_name = COALESCE(%s, employee.first_name),
-          employee.last_name = COALESCE(%s, employee.last_name),
-          employee.work_phone = COALESCE(%s, employee.work_phone)
+        employee.department_id = COALESCE(%s, employee.department_id),
+        employee.position_id = COALESCE(%s, employee.position_id),
+        employee.first_name = COALESCE(%s, employee.first_name),
+        employee.last_name = COALESCE(%s, employee.last_name),
+        employee.work_phone = COALESCE(%s, employee.work_phone)
       WHERE
-          employee.user_id = %s;
-
-      UPDATE users
-      SET
-          users.role_id = COALESCE(%s, users.role_id)
-      WHERE
-          users.id = %s;
-
+        employee.user_id = %s;
     """
     data = (
       kwargs['department_id'],
       kwargs['position_id'],
       kwargs['first_name'],
       kwargs['last_name'],
-      kwargs['work_phone'],
-      employee_id,
-      kwargs['role'],  # This is the role_id but I dont want to change
+      kwargs['work_phone'],  # This is the role_id but I dont want to change
       employee_id
     )
-  
+
     cursor.execute(query, data)
     dbConnection.commit()
   except Exception as e:
-    print(e)
+    print(f"Error in update_employee_by_id: {e}")
+    raise e
 
 def update_user_status_by_id(user_id, status):
   dbConnection = init_db()
@@ -228,14 +243,30 @@ def update_user_status_by_id(user_id, status):
   cursor.execute('UPDATE users SET status = %s WHERE id = %s', (status, user_id))
   dbConnection.commit()
 
-def update_pest_controller_by_id(pest_controller_id, **kwargs):
+def update_customer_by_id(user_id, **kwargs):
   dbConnection = init_db()
   cursor = dbConnection.cursor()
-  cursor.execute('UPDATE pest_controller SET first_name = %s, last_name = %s WHERE id = %s', (kwargs['first_name'], kwargs['last_name'], pest_controller_id))
-  dbConnection.commit()
-
-def update_pest_by_id(pest_id, **kwargs):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
-  cursor.execute('UPDATE pest SET name = %s, description = %s WHERE id = %s', (kwargs['name'], kwargs['description'], pest_id))
-  dbConnection.commit()
+  try:
+    query = """
+      UPDATE customer
+      JOIN users ON customer.user_id = users.id
+      SET 
+          customer.first_name = COALESCE(%s, customer.first_name),
+          customer.last_name = COALESCE(%s, customer.last_name),
+          customer.address = COALESCE(%s, customer.address),
+          customer.phone = COALESCE(%s, customer.phone)
+      WHERE
+          customer.user_id = %s;
+    """
+    data = (
+      kwargs['first_name'],
+      kwargs['last_name'],
+      kwargs['address'],
+      kwargs['phone'],
+      user_id
+    )
+    cursor.execute(query, data)
+    dbConnection.commit()
+  except Exception as e:
+    print(f"Error in update_customer_by_id: {e}")
+    raise e

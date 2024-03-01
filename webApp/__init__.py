@@ -1,5 +1,6 @@
 from flask import Flask, g
 from dotenv import load_dotenv
+from werkzeug.utils import secure_filename
 from flask_login import LoginManager
 import os
 import mysql.connector
@@ -9,6 +10,7 @@ load_dotenv()
 
 def init_db():
   if 'db' not in g:
+    
     g.db = mysql.connector.connect(
     host=os.getenv('MYSQL_HOST'),
     user=os.getenv('MYSQL_USER'),
@@ -26,13 +28,17 @@ def close_db(e=None):
 def create_app():
   app = Flask(__name__)
   app.config['SECRET_KEY'] = os.getenv('SECRET')
+  upload_folder = os.path.join(os.path.dirname(__file__), 'static/uploads')
+  app.config['UPLOAD'] = upload_folder
+  app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+  app.config['ALLOWED_IMAGE_EXTENSIONS'] = ['PNG', 'JPG', 'JPEG', 'GIF']
 
   from .auth import auth
-  from .non_authed_views import non_authed_views
+  from .general_view import general_view
   from .dashboards import dashboards
 
   app.register_blueprint(auth, url_prefix='/')
-  app.register_blueprint(non_authed_views, url_prefix='/')
+  app.register_blueprint(general_view, url_prefix='/')
   app.register_blueprint(dashboards, url_prefix='/')
 
   login_manager = LoginManager()
