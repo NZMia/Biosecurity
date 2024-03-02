@@ -2,24 +2,15 @@ DROP SCHEMA IF EXISTS biosecurity;
 CREATE SCHEMA biosecurity;
 USE biosecurity;
 
+CREATE TABLE IF NOT EXISTS state (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  state ENUM('active', 'inactive') NOT NULL
+);
+
 
 CREATE TABLE IF NOT EXISTS roles (
   id INT auto_increment PRIMARY KEY,
   role VARCHAR(255) NOT NULL
-);
-
-
-CREATE TABLE IF NOT EXISTS users (
-  id INT auto_increment PRIMARY KEY,
-  email VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  status VARCHAR(50) DEFAULT 'ACTIVE',
-  role_id INT DEFAULT 3,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (role_id) REFERENCES roles(id)
-  ON UPDATE CASCADE
-  ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS positions (
@@ -27,10 +18,25 @@ CREATE TABLE IF NOT EXISTS positions (
   position VARCHAR(255) NOT NULL
 );
 
-
 CREATE TABLE IF NOT EXISTS departments (
   id INT auto_increment PRIMARY KEY,
   department VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT auto_increment PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  role_id INT DEFAULT 3,
+  state_id INT DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (role_id) REFERENCES roles(id)
+  ON UPDATE CASCADE
+  ON DELETE CASCADE,
+  FOREIGN KEY (state_id) REFERENCES state(id)
+  ON UPDATE CASCADE
+  ON DELETE CASCADE
 );
 
 
@@ -68,7 +74,7 @@ CREATE TABLE IF NOT EXISTS customer (
   ON DELETE CASCADE
 );
 
-CREATE TABLE pests (
+CREATE TABLE IF NOT EXISTS pests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     img_id INT,
     common_name VARCHAR(255),
@@ -81,22 +87,22 @@ CREATE TABLE pests (
     distribution TEXT,
     impacts TEXT,
     control_methods TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (img_id) REFERENCES pest_images(id)
+    state_id INT DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE pest_images (
+CREATE TABLE IF NOT EXISTS pest_images (
     id INT AUTO_INCREMENT PRIMARY KEY,
     pest_id INT,
-    image_data LONGBLOB,
+    image LONGBLOB,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (pest_id) REFERENCES pests(id)
+    ON UPDATE CASCADE
+	ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS state (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  state ENUM('active', 'inactive') NOT NULL
-);
+ALTER TABLE pests ADD FOREIGN KEY (img_id) REFERENCES pest_images(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
 
 INSERT INTO roles (role) VALUES ('Staff');
 INSERT INTO roles (role) VALUES ('Admin');
@@ -112,6 +118,8 @@ INSERT INTO state (state)
 VALUES
   ('active'),
   ('inactive');
+  
+  
 -- INSERT INTO pest_controller (user_id, first_name, last_name, address, phone) VALUES (29, 'mia', 'zhang', '63 nortons ', '021234848');
 
 -- admin123: scrypt:32768:8:1$m4Ol75KV0cA66N4X$468ce636ee9db0fe648336511de4be1646744d02c8c235a4249cb480e3da330701d7c04301ffc3194c76dbcd04eab4600091ff5abb0e6eda965749cc1bf3bbcb  

@@ -1,7 +1,7 @@
 <div class="container mt-5">
   <h2 class="mb-4">Pests Form</h2>
 
-  <form action="/submit-pest" method="post" enctype="multipart/form-data">
+  <form method="POST" enctype="multipart/form-data">
 
     <!-- Common Name -->
     <div class="mb-3">
@@ -66,10 +66,10 @@
     <!-- Image Upload -->
     <div class="mb-3">
       <label for="image" class="form-label">Upload Image</label>
-      <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+      <input type="file" class="form-control" id="image" name="customFile" required>
     </div>
 
     <!-- Submit Button -->
-    <button type="submit" class="btn btn-success">Submit</button>
+    <button type="submit" class="btn btn-success" name='add_form'>Submit</button>
 
   </form>

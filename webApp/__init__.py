@@ -58,7 +58,7 @@ def create_app():
             user_id=user_data['id'],
             email=user_data['email'],
             password_hash=user_data['password'],
-            status=user_data['status'],
+            state=user_data['state_id'],
             role_id=user_data['role_id']
           ) 
           

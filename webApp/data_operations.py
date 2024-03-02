@@ -1,48 +1,7 @@
 from webApp import init_db
 from flask_login import current_user
 
-def create_user(**kwargs):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
-  user_query = """
-    INSERT INTO users (email, password, role_id)
-    VALUES (%s, %s, %s)
-  """
-  email = kwargs.get('email')
-  password = kwargs.get('password')
-  role_id = kwargs.get('role_id')
-
-  # INSERT INTO users table
-  cursor.execute(user_query, (email, password, role_id))
-  user_id = cursor.lastrowid
-
-  department_id = kwargs.get('department_id', None)
-  position_id = kwargs.get('position_id', None)
-  first_name = kwargs.get('first_name', None)
-  last_name = kwargs.get('last_name', None)
-  address = kwargs.get('address', None)
-  work_phone = kwargs.get('work_phone', None)
-  phone = kwargs.get('phone', None)
-
-  # INSERT INTO employee table
-  print(type(role_id))
-
-  if role_id != 3 and role_id != '3':
-    employee_query = """
-      INSERT INTO employee (user_id, department_id, position_id, first_name, last_name, work_phone)
-      VALUES (%s, %s, %s, %s, %s, %s)
-    """
-    cursor.execute(employee_query, (user_id, department_id, position_id, first_name, last_name, work_phone))
-  # INSERT INTO customer table
-  else:
-    customer_query = """
-      INSERT INTO customer (user_id, first_name, last_name, address, phone)
-      VALUES (%s, %s, %s, %s, %s)
-    """
-    cursor.execute(customer_query, (user_id, first_name, last_name, address, phone))
-
-  dbConnection.commit()
-
+# Fetch relevant data from the database
 def get_roles():
   dbConnection = init_db()
   cursor = dbConnection.cursor()
@@ -68,6 +27,24 @@ def get_departments():
     print(f"Error in get_departments: {e}")
     return None 
 
+def get_pests():
+  dbConnection = init_db()
+  cursor = dbConnection.cursor(dictionary=True)
+  query = """
+    SELECT 
+      pests.*, 
+      pest_images.image AS image
+    FROM 
+      pests
+    JOIN 
+      pest_images ON pests.img_id = pest_images.id
+    WHERE
+      pests.state_id = 1
+  """
+  cursor.execute(query)
+  pests = cursor.fetchall()
+  return pests
+
 def get_employees_by_role(role_id):
   dbConnection = init_db()
   cursor = dbConnection.cursor()
@@ -86,7 +63,7 @@ def get_employees_by_role(role_id):
         LEFT JOIN departments ON employee.department_id = departments.id
         LEFT JOIN positions ON employee.position_id = positions.id
     WHERE 
-        users.status = 'ACTIVE'
+        users.state_id = 1
     AND
         users.role_id = %s
   """
@@ -174,7 +151,7 @@ def get_customers():
     JOIN users ON customer.user_id = users.id
     JOIN roles ON users.role_id = roles.id
     WHERE 
-      users.status = 'ACTIVE'
+      users.state_id = 1
   """
   cursor.execute(query)
   # Fetch all rows as tuples
@@ -196,6 +173,152 @@ def get_user_by_email(email):
   user = cursor.fetchone()
   return user
 
+def is_pest_exist(common_name, scientific_name):
+  dbConnection = init_db()
+  cursor = dbConnection.cursor()
+  cursor.execute('SELECT id FROM pests WHERE common_name = %s OR scientific_name = %s', (common_name, scientific_name))
+  id = cursor.fetchone()
+  return id
+
+def is_pest_image_exist(pest_id, image):
+  dbConnection = init_db()
+  cursor = dbConnection.cursor()
+  cursor.execute('SELECT id FROM pest_images WHERE pest_id = %s AND image = %s', (pest_id, image))
+  id = cursor.fetchone()
+  return id
+
+# Create new 
+def save_pest_image(image):
+  dbConnection = init_db()
+  cursor = dbConnection.cursor()
+  query = """
+    INSERT INTO pest_images (image)
+    VALUES (%s)
+  """
+  cursor.execute(query, (image,))
+  img_id = cursor.lastrowid
+  dbConnection.commit()
+  return img_id
+
+def create_pest(**kwargs):
+  dbConnection = init_db()
+  cursor = dbConnection.cursor()
+
+  common_name = kwargs.get('common_name')
+  scientific_name = kwargs.get('scientific_name')
+  description = kwargs.get('description')
+  distinctive_features = kwargs.get('distinctive_features')
+  size = kwargs.get('size')
+  droppings = kwargs.get('droppings')
+  footprints = kwargs.get('footprints')
+  distribution = kwargs.get('distribution')
+  impacts = kwargs.get('impacts')
+  control_methods = kwargs.get('control_methods')
+  image = kwargs.get('image')
+
+  img_id = save_pest_image(image)
+  cursor.execute('SELECT id FROM pests WHERE common_name = %s OR scientific_name = %s', (common_name, scientific_name))
+  id = cursor.fetchone()
+  print(id)
+  if id:
+    raise Exception('Pest already exist')
+  else:
+    query = """
+      INSERT INTO pests (
+        common_name, 
+        scientific_name, 
+        description, 
+        distinctive_features, 
+        size, 
+        droppings, 
+        footprints, 
+        distribution, 
+        impacts, 
+        control_methods, 
+        img_id)
+      VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+
+    if img_id:
+      cursor.execute(query, (
+        common_name, 
+        scientific_name, 
+        description, 
+        distinctive_features, 
+        size, 
+        droppings, 
+        footprints, 
+        distribution, 
+        impacts, 
+        control_methods, 
+        img_id))
+      # Get the last inserted ID from pests table
+      pest_id = cursor.lastrowid
+
+      # Update img_id in pest_images table
+      cursor.execute("""
+          UPDATE pest_images
+          SET pest_id = %s
+          WHERE id = %s
+      """, (pest_id, img_id))
+
+      dbConnection.commit()
+    else:
+      return None
+
+# Create new user (can be employee or customer)
+def create_user(**kwargs):
+  dbConnection = init_db()
+  cursor = dbConnection.cursor()
+  user_query = """
+    INSERT INTO users (email, password, role_id)
+    VALUES (%s, %s, %s)
+  """
+  email = kwargs.get('email')
+  password = kwargs.get('password')
+  role_id = kwargs.get('role_id')
+
+  # INSERT INTO users table
+  cursor.execute(user_query, (email, password, role_id))
+  user_id = cursor.lastrowid
+
+  department_id = kwargs.get('department_id', None)
+  position_id = kwargs.get('position_id', None)
+  first_name = kwargs.get('first_name', None)
+  last_name = kwargs.get('last_name', None)
+  address = kwargs.get('address', None)
+  work_phone = kwargs.get('work_phone', None)
+  phone = kwargs.get('phone', None)
+
+  # INSERT INTO employee table
+
+  if role_id != 3 and role_id != '3':
+    employee_query = """
+      INSERT INTO employee (user_id, department_id, position_id, first_name, last_name, work_phone)
+      VALUES (%s, %s, %s, %s, %s, %s)
+    """
+    cursor.execute(employee_query, (user_id, department_id, position_id, first_name, last_name, work_phone))
+  # INSERT INTO customer table
+  else:
+    customer_query = """
+      INSERT INTO customer (user_id, first_name, last_name, address, phone)
+      VALUES (%s, %s, %s, %s, %s)
+    """
+    cursor.execute(customer_query, (user_id, first_name, last_name, address, phone))
+
+  dbConnection.commit()
+
+def add_pests_image(pest_id, image):
+  dbConnection = init_db()
+  cursor = dbConnection.cursor()
+  query = """
+    INSERT INTO pest_images (pest_id, image)
+    VALUES (%s, %s)
+  """
+  cursor.execute(query, (pest_id, image))
+  dbConnection.commit()
+
+# Update user state and password
 def update_user_password_by_email(email, password):
   dbConnection = init_db()
   cursor = dbConnection.cursor()
@@ -203,6 +326,18 @@ def update_user_password_by_email(email, password):
   cursor.execute('UPDATE users SET password = %s WHERE email = %s', (password, email))
   dbConnection.commit()
 
+def update_user_status_by_id(user_id, state):
+  dbConnection = init_db()
+  cursor = dbConnection.cursor()
+  query ="""
+      UPDATE users
+      SET state_id = (SELECT id FROM state WHERE state = %s)
+      WHERE id = %s;
+    """
+  cursor.execute(query, (state, user_id))
+  dbConnection.commit()
+
+# Update employee by id
 def update_employee_by_id(employee_id, **kwargs):
   dbConnection = init_db()
   cursor = dbConnection.cursor()
@@ -237,12 +372,7 @@ def update_employee_by_id(employee_id, **kwargs):
     print(f"Error in update_employee_by_id: {e}")
     raise e
 
-def update_user_status_by_id(user_id, status):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
-  cursor.execute('UPDATE users SET status = %s WHERE id = %s', (status, user_id))
-  dbConnection.commit()
-
+# Update customer by id
 def update_customer_by_id(user_id, **kwargs):
   dbConnection = init_db()
   cursor = dbConnection.cursor()
@@ -270,3 +400,15 @@ def update_customer_by_id(user_id, **kwargs):
   except Exception as e:
     print(f"Error in update_customer_by_id: {e}")
     raise e
+
+# Update pest state by id
+def update_pest_state_by_id(pest_id, state):
+  dbConnection = init_db()
+  cursor = dbConnection.cursor()
+  query = """
+    UPDATE pests
+    SET state_id = (SELECT id FROM state WHERE state = %s)
+    WHERE id = %s;
+  """
+  cursor.execute(query, (state, pest_id))
+  dbConnection.commit()

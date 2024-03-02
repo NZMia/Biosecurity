@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, send_from_directory
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
-from .data_operations import get_employees_by_role,get_customers, get_user_info_by_user_id,get_departments, get_positions, update_employee_by_id, update_user_status_by_id, get_roles, update_customer_by_id
+from .data_operations import get_employees_by_role,get_customers, get_user_info_by_user_id,get_departments, get_positions, update_employee_by_id, update_user_status_by_id, get_roles, update_customer_by_id,create_pest, get_pests, update_pest_state_by_id
+
 from .auth import create_new_user
 
 import os
@@ -63,7 +64,7 @@ def manage_staff():
     if 'delete_form' in request.form:
       try: 
         id = data.get('user_id')
-        update_user_status_by_id(id, 'INACTIVE')
+        update_user_status_by_id(id, 'inactive')
         flash(f'User deleted successfully! {id}', category='success')
       except Exception as e:
         flash(f'User deletion failed: {e}', category='error')
@@ -141,7 +142,7 @@ def manage_user():
     if 'delete_form' in request.form:
       try: 
         id = data.get('user_id')
-        update_user_status_by_id(id, 'INACTIVE')
+        update_user_status_by_id(id, 'inactive')
         flash(f'User deleted successfully! {id}', category='success')
       except Exception as e:
         flash(f'User deletion failed: {e}', category='error')
@@ -204,28 +205,87 @@ def manage_user():
   return render_template('dashboard/manage_custom.html', users=users, roles=role)
 
 
-def allowed_image(filename):
-  if not '.' in filename:
-    return False
-  ext = filename.rsplit('.', 1)[1]
-  if ext.upper() in current_app.config['ALLOWED_IMAGE_EXTENSIONS']:
-    return True
+def image_upload(image):
+  if request.files:
+    app = current_app 
+    filename = secure_filename(image.filename)
+    image.save(os.path.join(app.config['UPLOAD'], filename))
+    flash('Image uploaded successfully!', category='success')
+    return send_from_directory(app.config['UPLOAD'], filename)
   else:
+    flash('No image selected', category='error')
     return False
-  
+
 @dashboards.route('/manage_pest', methods=['GET', 'POST'])
 @login_required
 def manage_pest():
-  image = None
   if request.method == 'POST':
-      
-      if request.files:
-        app = current_app 
-        image = request.files['customFile']
-        filename = secure_filename(image.filename)
-        image.save(os.path.join(app.config['UPLOAD'], filename))
-        flash('Image uploaded successfully!', category='success')
-        return send_from_directory(app.config['UPLOAD'], filename)
+      data = request.form
+
+      if 'delete_form' in request.form:
+        try: 
+          id = data.get('pest_id')
+          update_pest_state_by_id(id, 'inactive')
+          flash(f'Pest deleted successfully! {id}', category='success')
+        except Exception as e:
+          flash(f'Pest deletion failed: {e}', category='error')
+      elif 'update_form' in request.form:
+        pass
       else:
-        flash('No image selected', category='error')
-  return render_template('dashboard/manage_pest.html', img=image)
+
+        common_name = data.get('commonName')
+        scientific_name = data.get('scientificName')
+        description = data.get('description')
+        distinctive_features = data.get('distinctiveFeatures')
+        size = data.get('size')
+        droppings = data.get('droppings')
+        footprints = data.get('footprints')
+        distribution = data.get('distribution')
+        impacts = data.get('impacts')
+        control_methods = data.get('controlMethods')
+
+        img = request.files.get('customFile')  # Using get to avoid KeyError
+        if img:
+          uploaded_image = image_upload(img)
+          if uploaded_image:
+            try:
+              create_pest(
+                  common_name=common_name,
+                  scientific_name=scientific_name,
+                  description=description,
+                  distinctive_features=distinctive_features,
+                  size=size,
+                  droppings=droppings,
+                  footprints=footprints,
+                  distribution=distribution,
+                  impacts=impacts,
+                  control_methods=control_methods,
+                  image=img.filename
+              )
+              pests = get_pests()
+              return render_template('dashboard/manage_pest.html', pests=pests)
+            except Exception as e:
+                flash(f'Pest creation failed: {e}', category='error')
+          else:
+            flash('Image upload failed', category='error')
+        else:
+          flash('No image selected', category='error')
+        
+            try:
+              create_pest(
+                common_name=common_name,
+                scientific_name=scientific_name,
+                description=description,
+                distinctive_features=distinctive_features,
+                size=size,
+                droppings=droppings,
+                footprints=footprints,
+                distribution=distribution,
+                impacts=impacts,
+                control_methods=control_methods,
+                image=img.filename
+              )
+              return redirect(request.url)
+            except Exception as e:
+              flash(f'Pest creation failed: {e}', category='error')
+    return render_template('dashboard/manage_pest.html', pests=pests)

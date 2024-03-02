@@ -34,14 +34,17 @@
 
           {% for pest in pests%}
           <tr>
-            <td>{{ pest.img }}</td>
+            <td>
+              <img class="rounded-3" style="width: 100px;" alt="Avatar"
+                src="{{ url_for('static', filename='uploads/' + pest.image.decode('utf-8')) }}" />
+            </td>
             <td>{{ pest.common_name }}</td>
             <td>{{ pest.scientific_name }}</td>
             <td>{{ pest.footprints }}</td>
             <td>{{ pest.size }}</td>
 
             <td>
-              {% call macros.modal_title(pest.pest_id,'btn-icon-edit', 'test')%}
+              {% call macros.modal_title(pest.id,'btn-icon-edit', 'test')%}
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-pencil-square" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-placement="left"
                 data-bs-title="View Details and Update">
@@ -53,7 +56,7 @@
               {% endcall %}
 
               {% call
-              macros.modal_title( pest.pest_id ~ '_delete','btn-icon-delete', 'test')%}
+              macros.modal_title( pest.id ~ '_delete','btn-icon-delete', 'test')%}
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3"
                 viewBox="0 0 16 16">
                 <path
@@ -63,9 +66,9 @@
             </td>
           </tr>
 
-          {% call components.modal( pest.pest_id ~ '_delete', pest.first_name,'Delete')%}
+          {% call components.modal( pest.id ~ '_delete', pest.first_name,'Delete')%}
           <form method="POST">
-            <input type="hidden" name="pest_id" value="{{ pest.pest_id }}" />
+            <input type="hidden" name="pest_id" value="{{ pest.id }}" />
             <p>Are you sure you want to delete this staff member?</p>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
