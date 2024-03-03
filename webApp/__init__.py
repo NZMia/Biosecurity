@@ -1,6 +1,5 @@
 from flask import Flask, g
 from dotenv import load_dotenv
-from werkzeug.utils import secure_filename
 from flask_login import LoginManager
 import os
 import mysql.connector
@@ -10,13 +9,12 @@ load_dotenv()
 
 def init_db():
   if 'db' not in g:
-    
     g.db = mysql.connector.connect(
-    host=os.getenv('MYSQL_HOST'),
-    user=os.getenv('MYSQL_USER'),
-    password=os.getenv('MYSQL_PASSWORD'),
-    database=os.getenv('MYSQL_DB')
-)
+      host=os.getenv('MYSQL_HOST'),
+      user=os.getenv('MYSQL_USER'),
+      password=os.getenv('MYSQL_PASSWORD'),
+      database=os.getenv('MYSQL_DB')
+    )
   return g.db
 
 def close_db(e=None):
