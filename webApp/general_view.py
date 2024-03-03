@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
 from flask_login import login_required
-from .data_operations import get_pests
-from webApp import init_db
+from webApp.data_operations import get_pests
+
 
 general_view  = Blueprint('general_view', __name__)
 

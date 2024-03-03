@@ -1,24 +1,43 @@
-from webApp import init_db
 from flask_login import current_user
+import mysql.connector
+
+from webApp.config import Config
+
+dbconn = None
+connection = None
+
+def getCurrConn():
+  global dbconn
+  global connection
+
+  if dbconn is None:
+    connection = mysql.connector.connect(
+      host=Config.MYSQL_HOST,
+      user=Config.MYSQL_USER,
+      password=Config.MYSQL_PASSWORD,
+      database=Config.MYSQL_DB,
+      autocommit=True
+    )
+    dbconn = connection.cursor(dictionary=True)
+  return dbconn
 
 # Fetch relevant data from the database
 def get_roles():
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   cursor.execute('SELECT * FROM roles')
   roles = cursor.fetchall()
   return roles
 
 def get_positions():
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   cursor.execute('SELECT * FROM positions')
   positions = cursor.fetchall()
   return positions
 
 def get_departments():
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  cursor = getCurrConn()
   try:
     cursor.execute('SELECT * FROM departments')
     departments = cursor.fetchall()
@@ -28,8 +47,8 @@ def get_departments():
     return None 
 
 def get_pests():
-  dbConnection = init_db()
-  cursor = dbConnection.cursor(dictionary=True)
+  
+  cursor = getCurrConn()
   query = """
     SELECT 
       pests.*, 
@@ -52,10 +71,9 @@ def get_pests():
       pest['image'] = pest['image'].decode('utf-8')
   return pests
 
-
 def get_pest_images(pest_id):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   query = """
     SELECT 
       pest_images.id AS image_id,
@@ -70,8 +88,8 @@ def get_pest_images(pest_id):
   return pest_images
 
 def get_employees_by_role(role_id):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   query = """
     SELECT 
       employee.*, 
@@ -93,20 +111,13 @@ def get_employees_by_role(role_id):
   """
   cursor.execute(query, (role_id,))
    # Fetch all rows as tuples
-  employees_tuples = cursor.fetchall()
-
-  # Get column names from the cursor description
-  column_names = [desc[0] for desc in cursor.description]
-
-  # Convert each tuple to a dictionary using column names
-  employees = [dict(zip(column_names, employee)) for employee in employees_tuples]
+  employees = cursor.fetchall()
 
   return employees
 
-def get_user_info_by_user_id():
+def get_current_user():
 
-  dbConnection = init_db()
-  cursor = dbConnection.cursor(dictionary=True)
+  cursor = getCurrConn()
   user_id = current_user.id
   role_id = current_user.role_id
 
@@ -154,17 +165,12 @@ def get_user_info_by_user_id():
   cursor.execute(query, (user_id, role_id))
 
   user_info = cursor.fetchone()
-  print(user_info)
-  # # Fetch column names
-  # column_names = [desc[0] for desc in cursor.description]
 
-  # # Create a dictionary with column names as keys and values from the tuple
-  # user_info_dict = dict(zip(column_names, user_info))
   return user_info
 
 def get_customers():
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   query = """
     SELECT 
       customer.*,
@@ -179,53 +185,55 @@ def get_customers():
   """
   cursor.execute(query)
   # Fetch all rows as tuples
-  customers_tuples = cursor.fetchall()
-  # Get column names
-  column_names = [desc[0] for desc in cursor.description]
-  # Convert each tuple to a dictionary using column names
-  customers_dict_list = [
-      dict(zip(column_names, customer))
-      for customer in customers_tuples
-  ]
-
-  return customers_dict_list
+  customers= cursor.fetchall()
+ 
+  return customers
 
 def get_user_by_email(email):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
   user = cursor.fetchone()
   return user
 
+def get_user_by_id(user_id):
+  try:
+    cursor = getCurrConn()
+    cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+    user = cursor.fetchone()
+    return user
+  except Exception as e:
+    print(f"Error in get_user_by_id: {e}")
+    raise e
+
 def is_pest_exist(common_name, scientific_name):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   cursor.execute('SELECT id FROM pests WHERE common_name = %s OR scientific_name = %s', (common_name, scientific_name))
   id = cursor.fetchone()
   return id
 
 def is_pest_image_exist(pest_id, image):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   cursor.execute('SELECT id FROM pest_images WHERE pest_id = %s AND image = %s', (pest_id, image))
   id = cursor.fetchone()
   return id
 
 def save_pest_image(image):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  cursor = getCurrConn()
   query = """
     INSERT INTO pest_images (image)
     VALUES (%s)
   """
   cursor.execute(query, (image,))
   img_id = cursor.lastrowid
-  dbConnection.commit()
+  connection.commit()
   return img_id
 
 def create_pest(**kwargs):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
 
   common_name = kwargs.get('common_name')
   scientific_name = kwargs.get('scientific_name')
@@ -285,14 +293,14 @@ def create_pest(**kwargs):
           WHERE id = %s
       """, (pest_id, img_id))
 
-      dbConnection.commit()
+      connection.commit()
     else:
       return None
 
 # Create new user (can be employee or customer)
 def create_user(**kwargs):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   user_query = """
     INSERT INTO users (email, password, role_id)
     VALUES (%s, %s, %s)
@@ -329,41 +337,41 @@ def create_user(**kwargs):
     """
     cursor.execute(customer_query, (user_id, first_name, last_name, address, phone))
 
-  dbConnection.commit()
+  connection.commit()
 
 def add_pests_image(pest_id, image):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   query = """
     INSERT INTO pest_images (pest_id, image)
     VALUES (%s, %s)
   """
   cursor.execute(query, (pest_id, image))
-  dbConnection.commit()
+  connection.commit()
 
 # Update user state and password
 def update_user_password_by_email(email, password):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   
   cursor.execute('UPDATE users SET password = %s WHERE email = %s', (password, email))
-  dbConnection.commit()
+  connection.commit()
 
 def update_user_status_by_id(user_id, state):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   query ="""
       UPDATE users
       SET state_id = (SELECT id FROM state WHERE state = %s)
       WHERE id = %s;
     """
   cursor.execute(query, (state, user_id))
-  dbConnection.commit()
+  connection.commit()
 
 # Update employee by id
 def update_employee_by_id(employee_id, **kwargs):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   try:
     query = """
       UPDATE employee
@@ -390,15 +398,15 @@ def update_employee_by_id(employee_id, **kwargs):
     )
 
     cursor.execute(query, data)
-    dbConnection.commit()
+    connection.commit()
   except Exception as e:
     print(f"Error in update_employee_by_id: {e}")
     raise e
 
 # Update customer by id
 def update_customer_by_id(user_id, **kwargs):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   try:
     query = """
       UPDATE customer
@@ -419,7 +427,7 @@ def update_customer_by_id(user_id, **kwargs):
       user_id
     )
     cursor.execute(query, data)
-    dbConnection.commit()
+    connection.commit()
   except Exception as e:
     print(f"Error in update_customer_by_id: {e}")
     raise e
@@ -427,22 +435,22 @@ def update_customer_by_id(user_id, **kwargs):
 # Update pest state by id
 def update_pest_state_by_id(pest_id, state):
   try:
-    dbConnection = init_db()
-    cursor = dbConnection.cursor()
+    
+    cursor = getCurrConn()
     query = """
       UPDATE pests
       SET state_id = (SELECT id FROM state WHERE state = %s)
       WHERE id = %s;
     """
     cursor.execute(query, (state, pest_id))
-    dbConnection.commit()
+    connection.commit()
   except Exception as e:
     print(f"Error in update_pest_state_by_id: {e}")
     raise e
 
 def  update_pest_by_id(pest_id, **kwargs):
-  dbConnection = init_db()
-  cursor = dbConnection.cursor()
+  
+  cursor = getCurrConn()
   
   try:
     query = """
@@ -477,6 +485,6 @@ def  update_pest_by_id(pest_id, **kwargs):
       pest_id
     )
     cursor.execute(query, data)
-    dbConnection.commit()
+    connection.commit()
   except Exception as e:
     raise e

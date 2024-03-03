@@ -10,7 +10,8 @@
       {% endif %}
 
       {% for option in options %}
-      <option value="{{ option[0] }}" {% if value==option[0] %}selected{% endif %}>{{ option[1] }}</option>
+      <option value="{{ option.id }}" {% if value==option.id %}selected{% endif %}>{{ option.values() | list | last }}
+      </option>
       {% endfor %}
     </select>
 

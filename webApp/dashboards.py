@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, send_from_directory
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
-from .data_operations import get_employees_by_role,get_customers, get_user_info_by_user_id,get_departments, get_positions, update_employee_by_id, update_user_status_by_id, get_roles, update_customer_by_id,create_pest, get_pests, update_pest_state_by_id, add_pests_image, update_pest_by_id
+from .data_operations import get_employees_by_role,get_customers, get_current_user,get_departments, get_positions, update_employee_by_id, update_user_status_by_id, get_roles, update_customer_by_id,create_pest, get_pests, update_pest_state_by_id, add_pests_image, update_pest_by_id
 
 from .auth import create_new_user
 
@@ -36,7 +36,7 @@ def dashboard():
     except Exception as e:
       flash(f'Employee update failed: {e}', category='error')
 
-  current_user_info = get_user_info_by_user_id()
+  current_user_info = get_current_user()
   
   employees = get_employees_by_role(1)
   departments = get_departments()
