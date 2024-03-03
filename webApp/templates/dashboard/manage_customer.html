@@ -109,7 +109,7 @@
         {{ macro.form_field('Email', 'email', 'email', '', required) }}
         {{ macro.form_field('Password', 'pwd', 'password', '', required) }}
         {{ macro.form_field('Password', 're-pwd', 'password', '', required) }}
-        {{ macro.form_field('Role', 'role_id', 'select', 3, readonly=true, options=roles) }}
+        {{ macro.form_field('Role', 'role_id', 'text', roles[2].role, readonly=true) }}
         {{ macro.form_field('First Name', 'fname', 'text', '') }}
         {{ macro.form_field('Last Name', 'lname', 'text', '') }}
         {{ macro.form_field('Phone', 'phone', 'text', '', '')}}
