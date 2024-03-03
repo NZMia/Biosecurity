@@ -43,7 +43,31 @@ def get_pests():
   """
   cursor.execute(query)
   pests = cursor.fetchall()
+  for pest in pests:
+    pest_id = pest['id']
+    other_images = get_pest_images(pest_id)
+    pest['other_images'] = other_images
+
+    if 'image' in pest:
+      pest['image'] = pest['image'].decode('utf-8')
   return pests
+
+
+def get_pest_images(pest_id):
+  dbConnection = init_db()
+  cursor = dbConnection.cursor()
+  query = """
+    SELECT 
+      pest_images.id AS image_id,
+      pest_images.image AS image
+    FROM 
+      pest_images
+    WHERE
+      pest_images.pest_id = %s
+  """
+  cursor.execute(query, (pest_id,))
+  pest_images = cursor.fetchall()
+  return pest_images
 
 def get_employees_by_role(role_id):
   dbConnection = init_db()
@@ -187,7 +211,6 @@ def is_pest_image_exist(pest_id, image):
   id = cursor.fetchone()
   return id
 
-# Create new 
 def save_pest_image(image):
   dbConnection = init_db()
   cursor = dbConnection.cursor()
@@ -403,12 +426,57 @@ def update_customer_by_id(user_id, **kwargs):
 
 # Update pest state by id
 def update_pest_state_by_id(pest_id, state):
+  try:
+    dbConnection = init_db()
+    cursor = dbConnection.cursor()
+    query = """
+      UPDATE pests
+      SET state_id = (SELECT id FROM state WHERE state = %s)
+      WHERE id = %s;
+    """
+    cursor.execute(query, (state, pest_id))
+    dbConnection.commit()
+  except Exception as e:
+    print(f"Error in update_pest_state_by_id: {e}")
+    raise e
+
+def  update_pest_by_id(pest_id, **kwargs):
   dbConnection = init_db()
   cursor = dbConnection.cursor()
-  query = """
-    UPDATE pests
-    SET state_id = (SELECT id FROM state WHERE state = %s)
-    WHERE id = %s;
-  """
-  cursor.execute(query, (state, pest_id))
-  dbConnection.commit()
+  
+  try:
+    query = """
+      UPDATE pests
+      SET 
+        img_id = COALESCE(%s, img_id),
+        common_name = COALESCE(%s, common_name),
+        scientific_name = COALESCE(%s, scientific_name),
+        description = COALESCE(%s, description),
+        distinctive_features = COALESCE(%s, distinctive_features),
+        size = COALESCE(%s, size),
+        droppings = COALESCE(%s, droppings),
+        footprints = COALESCE(%s, footprints),
+        distribution = COALESCE(%s, distribution),
+        impacts = COALESCE(%s, impacts),
+        control_methods = COALESCE(%s, control_methods)
+      WHERE
+        id = %s;
+    """
+    data = (
+      kwargs['img_id'],
+      kwargs['common_name'],
+      kwargs['scientific_name'],
+      kwargs['description'],
+      kwargs['distinctive_features'],
+      kwargs['size'],
+      kwargs['droppings'],
+      kwargs['footprints'],
+      kwargs['distribution'],
+      kwargs['impacts'],
+      kwargs['control_methods'],
+      pest_id
+    )
+    cursor.execute(query, data)
+    dbConnection.commit()
+  except Exception as e:
+    raise e

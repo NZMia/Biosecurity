@@ -100,6 +100,11 @@ video {
   background: none;
   color: #dc3545;
 }
+.btn-icon-upload {
+  border: none;
+  background: none;
+  color: #6f42c1;
+}
 /* h1 {
   color: #198754;
 } */

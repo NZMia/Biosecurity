@@ -69,8 +69,7 @@ dashboard {% endblock%} {% block content %}
           <form method="POST">
             <input type="hidden" name="user_id" value="{{ employee.user_id }}" />
             {{ macro.form_field('Email', 'email', 'email', employee.email, readonly=true) }}
-            {{ macro.form_field('Role', 'role', 'select', employee.role_id, options=roles) }}
-
+            {{ macro.form_field('Role', 'role', 'text', employee.role , readonly=true) }}
             {{ macro.form_field('First Name', 'fname', 'text', employee.first_name) }}
             {{ macro.form_field('Last Name', 'lname', 'text', employee.last_name) }}
             {{ macro.form_field('Department','department', 'select', employee.department_id,options=departments) }}

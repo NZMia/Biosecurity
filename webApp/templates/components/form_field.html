@@ -8,10 +8,16 @@
       {% if id %}
       <option value="" selected disabled hidden>Choose here</option>
       {% endif %}
+
       {% for option in options %}
       <option value="{{ option[0] }}" {% if value==option[0] %}selected{% endif %}>{{ option[1] }}</option>
       {% endfor %}
     </select>
+
+    {% elif type == 'textarea' %}
+
+    <textarea class="form-control{% if readonly %}-plaintext{% endif %}" name="{{ id }}" rows="3" {% if readonly
+      %}readonly{% endif %}>{{ value }}</textarea>
     {% else %}
     <input type="{{ type }}" class="form-control{% if readonly %}-plaintext{% endif %}" id="{{ id }}"
       value="{{ value }}" name="{{ id }}" {% if readonly %}readonly{% endif %}>

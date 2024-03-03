@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS pest_images (
     FOREIGN KEY (pest_id) REFERENCES pests(id)
     ON UPDATE CASCADE
 	ON DELETE CASCADE
-);
+)ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 ALTER TABLE pests ADD FOREIGN KEY (img_id) REFERENCES pest_images(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
@@ -114,12 +114,23 @@ INSERT INTO departments (department) VALUES ('IT');
 INSERT INTO departments (department) VALUES ('HR');
 
 INSERT INTO positions (position) VALUES ('Manager'), ('Front desk'),('Customer support'), ('Technical leader');
-INSERT INTO state (state)
-VALUES
-  ('active'),
-  ('inactive');
-  
-  
--- INSERT INTO pest_controller (user_id, first_name, last_name, address, phone) VALUES (29, 'mia', 'zhang', '63 nortons ', '021234848');
+INSERT INTO state (state) VALUES ('active'),('inactive');
 
--- admin123: scrypt:32768:8:1$m4Ol75KV0cA66N4X$468ce636ee9db0fe648336511de4be1646744d02c8c235a4249cb480e3da330701d7c04301ffc3194c76dbcd04eab4600091ff5abb0e6eda965749cc1bf3bbcb  
+-- Insert Admin User
+INSERT INTO users (email, password, role_id) 
+VALUES ('admin@biosecurity.co.nz', 'scrypt:32768:8:1$ag4HTO6GachMQuyn$fd4304001c25127e473fc0241761abf9dd4cb54c663066e2f52e94807bc47948f7c17254e78d80bd78ecbfca5d658cd22748e387da63c42f862486a6fe3e3be3', 2);
+
+-- Insert Staff Users
+INSERT INTO users (email, password, role_id) 
+VALUES 
+  ('staff1@biosecurity.co.nz', 'scrypt:32768:8:1$43wnQTlQhdFFI6nC$d94a54fadbe745da9680c99dc8689ad0385a75b660e1e88611beb184b324ac1f05dbbdc4570dae98583785814af8a16b6037299db4874e4e1903a8a821c744af', 1),
+  ('staff2@biosecurity.co.nz', 'scrypt:32768:8:1$43wnQTlQhdFFI6nC$d94a54fadbe745da9680c99dc8689ad0385a75b660e1e88611beb184b324ac1f05dbbdc4570dae98583785814af8a16b6037299db4874e4e1903a8a821c744af', 1),
+  ('staff3@biosecurity.co.nz', 'scrypt:32768:8:1$43wnQTlQhdFFI6nC$d94a54fadbe745da9680c99dc8689ad0385a75b660e1e88611beb184b324ac1f05dbbdc4570dae98583785814af8a16b6037299db4874e4e1903a8a821c744af', 1);
+
+-- Insert employee 
+INSERT INTO employee (user_id, first_name, last_name)
+VALUES
+	(1, 'Nora', 'Wang'),
+	(2, 'Harold', 'Zhang'),
+	(3, 'Luna', 'Wang'),
+	(4, 'Mia', 'Zhang')
