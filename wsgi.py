@@ -6,4 +6,5 @@ if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
 from webApp import create_app
-app = create_app()
+application = create_app()
+

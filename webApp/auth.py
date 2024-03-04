@@ -52,16 +52,23 @@ def create_new_user(
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
   if request.method == 'POST':
-
     email = request.form.get('email')
     password = request.form.get('pwd')
-   
     try:
       user_data = get_user_by_email(email)
       if user_data:
-        stored_password_hash = user_data[2]
+        print(user_data["password"])
+        stored_password_hash = user_data["password"]
+
         if check_password_hash(stored_password_hash, password):
-          user = User(*user_data[:-2])          
+
+          user = User(
+            user_id=user_data['id'],
+            email=user_data['email'],
+            password_hash=user_data['password'],
+            state_id=user_data['state_id'],
+            role_id=user_data['role_id']
+          )          
           login_user(user, remember=True)
           flash('Logged in successfully!', category='success')
           return redirect(url_for('dashboards.dashboard'))
@@ -82,6 +89,9 @@ def logout():
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
+  if request.method == 'GET':
+    roles = get_roles()
+    return render_template('register.html', roles=roles)
   if request.method == 'POST':
 
     email = request.form.get('email')
@@ -121,8 +131,7 @@ def register():
       print(e)
       flash('Account creation failed: {e}', category='error')
       
-  roles = get_roles()
-  return render_template('register.html', roles=roles)
+  return redirect(request.url)
 
 
 @auth.route('/reset-password', methods=['GET', 'POST'])
