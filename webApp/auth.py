@@ -68,7 +68,7 @@ def login():
             password_hash=user_data['password'],
             state_id=user_data['state_id'],
             role_id=user_data['role_id']
-          )          
+          )        
           login_user(user, remember=True)
           flash('Logged in successfully!', category='success')
           return redirect(url_for('dashboards.dashboard'))
@@ -118,10 +118,17 @@ def register():
       )
     
       # Retrieve the newly created user
-      user = get_user_by_email(email)
+      user_data = get_user_by_email(email)
 
-      if(user) :
-        login_user(User(*user[:-2]), remember=True)
+      if(user_data) :
+        user = User(
+          user_id=user_data['id'],
+          email=user_data['email'],
+          password_hash=user_data['password'],
+          state_id=user_data['state_id'],
+          role_id=user_data['role_id']
+        ) 
+        login_user(user, remember=True)
         flash('Account created!', category='success')
 
         return redirect(url_for('dashboards.dashboard'))
@@ -143,12 +150,13 @@ def reset_password():
     pwd = request.form.get('pwd')
     pwd1 = request.form.get('re-pwd')
 
-    user = get_user_by_email(email)
+    user_data = get_user_by_email(email)
 
-    if not user:
+    if not user_data:
       flash('Email does not exist.', category='error')
     else:
-      if not check_password_hash(user[2], old_pwd):
+      
+      if not check_password_hash(user_data['password'], old_pwd):
         flash('current password is incorrect.', category='error')
       if pwd != pwd1:
         flash('Passwords don\'t match.', category='error')

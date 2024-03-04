@@ -3,7 +3,6 @@
 {% import 'components/form_field.html' as macross %}
 {% import 'components/card.html' as macros %}
 
-
 {% block title %}
 dashboard
 {% endblock %}
@@ -15,24 +14,31 @@ dashboard
 </div>
 
 <div class="row">
-  <div class="col-xl-3 col-sm-6">
-    {% call macros.card('admin', 'card-left-border-green') %}
-    <p>{{ admin_len }}</p>
+  <div class="col-xl-4 col-sm-12">
+    {% call macros.card('Admin', 'card-left-border-green') %}
+    <ul>
+      <li>Can update profile</li>
+      <li>Can manage staff</li>
+      <li>Can manage pest controller</li>
+      <li>Can manage pest</li>
+    </ul>
     {% endcall %}
   </div>
-  <div class="col-xl-3 col-sm-6">
-    {% call macros.card('admin', 'card-left-border-red') %}
-    <p>{{ admin_len }}</p>
+  <div class="col-xl-4 col-sm-12">
+    {% call macros.card('Staff', 'card-left-border-red') %}
+    <ul>
+      <li>Can update profile</li>
+      <li>Can manage pest controller</li>
+      <li>Can manage pest</li>
+    </ul>
     {% endcall %}
   </div>
-  <div class="col-xl-3 col-sm-6">
-    {% call macros.card('staff', 'card-left-border-yellow') %}
-    <p>{{ employ_len }}</p>
-    {% endcall %}
-  </div>
-  <div class="col-xl-3 col-sm-6">
-    {% call macros.card('pest controller', 'card-left-border-blue') %}
-    <p>{{ controller_len }}</p>
+  <div class="col-xl-4 col-sm-12">
+    {% call macros.card('Pest Controller', 'card-left-border-yellow') %}
+    <ul>
+      <li>Can update profile</li>
+      <li>Can View Pest</li>
+    </ul>
     {% endcall %}
   </div>
 </div>

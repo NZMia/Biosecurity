@@ -12,6 +12,16 @@ dashboards  = Blueprint('dashboards', __name__)
 @dashboards.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+  if request.method == 'GET':
+    current_user_info = get_current_user()
+    departments = get_departments()
+    positions = get_positions()
+    return render_template(
+      'dashboard/index.html',
+      user_info=current_user_info,
+      departments=departments,
+      positions=positions
+    )
   # update user info
   if request.method == 'POST':
     data = request.form
@@ -36,22 +46,7 @@ def dashboard():
     except Exception as e:
       flash(f'Employee update failed: {e}', category='error')
 
-  current_user_info = get_current_user()
-  
-  employees = get_employees_by_role(1)
-  departments = get_departments()
-  positions = get_positions()
-  admin = get_employees_by_role(2)
-  customers = get_customers()
-  return render_template(
-    'dashboard/index.html',
-    admin_len=len(admin),
-    employ_len=len(employees),
-    controller_len=len(customers),
-    user_info=current_user_info,
-    departments=departments,
-    positions=positions
-  )
+  return redirect(request.url)
 
 @dashboards.route('/manage_staff', methods=['GET', 'POST'] )
 @login_required
@@ -337,4 +332,5 @@ def manage_pest():
           flash('Image upload failed', category='error')
       else:
         flash('No image selected', category='error')
-    return redirect(request.url)
+  
+  return redirect(request.url)

@@ -2,11 +2,9 @@ from flask import Flask, g
 from dotenv import load_dotenv
 from flask_login import LoginManager
 import os
-from .data_operations import get_user_by_id, get_roles, get_departments, get_positions
+from .data_operations import get_user_by_id
 from .models import User
-from .config import Config, getCurrConn
-
-import mysql.connector
+from .config import Config
 
 load_dotenv()
 
@@ -27,7 +25,6 @@ def create_app():
   from webApp.general_view import general_view
   from webApp.dashboards import dashboards
 
-  
   app.register_blueprint(auth, url_prefix='/')
   app.register_blueprint(general_view, url_prefix='/')
   app.register_blueprint(dashboards, url_prefix='/')
@@ -38,6 +35,8 @@ def create_app():
 
   @login_manager.user_loader
   def load_user(id):
+
+
     user_data = get_user_by_id(id)
 
     if user_data:

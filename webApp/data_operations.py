@@ -175,14 +175,10 @@ def get_user_by_email(email):
   return user
 
 def get_user_by_id(user_id):
-  try:
-    cursor = getCurrConn()
-    cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
-    user = cursor.fetchone()
-    return user
-  except Exception as e:
-    print(f"Error in get_user_by_id: {e}")
-    raise e
+  cursor = getCurrConn()
+  cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
+  user = cursor.fetchone()
+  return user
 
 def is_pest_exist(common_name, scientific_name):
   
