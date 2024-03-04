@@ -103,7 +103,7 @@
 
       {% call components.modal('add_modal','User Updated','Update')%}
       <form method="POST">
-        <input type="hidden" name='role_id' value={{ roles[0].id }}>
+        <input type="hidden" name='role_id' value={{ roles[2].id }}>
         {{ macro.form_field('Email', 'email', 'email', '', required) }}
         {{ macro.form_field('Password', 'pwd', 'password', '', required) }}
         {{ macro.form_field('Password', 're-pwd', 'password', '', required) }}

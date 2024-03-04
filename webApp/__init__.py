@@ -4,7 +4,7 @@ from flask_login import LoginManager
 import os
 from .data_operations import get_user_by_id
 from .models import User
-from .config import Config
+from .config import Config, getCurrConn
 
 load_dotenv()
 
@@ -20,6 +20,8 @@ def create_app():
   app.config['UPLOAD'] = upload_folder
   app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
   app.config['ALLOWED_IMAGE_EXTENSIONS'] = ['PNG', 'JPG', 'JPEG', 'GIF']
+
+  getCurrConn()
 
   from webApp.auth import auth
   from webApp.general_view import general_view
@@ -46,10 +48,10 @@ def create_app():
           password_hash=user_data['password'],
           state_id=user_data['state_id'],
           role_id=user_data['role_id']
-        ) 
-        
+        )
+
         return user
 
     return None  # User not found
-  
+
   return app
