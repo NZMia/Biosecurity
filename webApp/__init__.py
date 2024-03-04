@@ -2,9 +2,9 @@ from flask import Flask, g
 from dotenv import load_dotenv
 from flask_login import LoginManager
 import os
-from webApp.config import Config
-from webApp.data_operations import get_user_by_id
-from webApp.models import User
+from .data_operations import get_user_by_id
+from .models import User
+from .config import Config
 
 load_dotenv()
 

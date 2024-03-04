@@ -1,29 +1,7 @@
 from flask_login import current_user
-import mysql.connector
+from webApp.config import getCurrConn
 
-from webApp.config import Config
-
-dbconn = None
-connection = None
-
-def getCurrConn():
-  global dbconn
-  global connection
-
-  if dbconn is None:
-    connection = mysql.connector.connect(
-      host=Config.MYSQL_HOST,
-      user=Config.MYSQL_USER,
-      password=Config.MYSQL_PASSWORD,
-      database=Config.MYSQL_DB,
-      autocommit=True
-    )
-    dbconn = connection.cursor(dictionary=True)
-  return dbconn
-
-# Fetch relevant data from the database
 def get_roles():
-  
   cursor = getCurrConn()
   cursor.execute('SELECT * FROM roles')
   roles = cursor.fetchall()
@@ -228,7 +206,6 @@ def save_pest_image(image):
   """
   cursor.execute(query, (image,))
   img_id = cursor.lastrowid
-  connection.commit()
   return img_id
 
 def create_pest(**kwargs):
@@ -292,8 +269,6 @@ def create_pest(**kwargs):
           SET pest_id = %s
           WHERE id = %s
       """, (pest_id, img_id))
-
-      connection.commit()
     else:
       return None
 
@@ -337,7 +312,6 @@ def create_user(**kwargs):
     """
     cursor.execute(customer_query, (user_id, first_name, last_name, address, phone))
 
-  connection.commit()
 
 def add_pests_image(pest_id, image):
   
@@ -347,7 +321,6 @@ def add_pests_image(pest_id, image):
     VALUES (%s, %s)
   """
   cursor.execute(query, (pest_id, image))
-  connection.commit()
 
 # Update user state and password
 def update_user_password_by_email(email, password):
@@ -355,7 +328,6 @@ def update_user_password_by_email(email, password):
   cursor = getCurrConn()
   
   cursor.execute('UPDATE users SET password = %s WHERE email = %s', (password, email))
-  connection.commit()
 
 def update_user_status_by_id(user_id, state):
   
@@ -366,7 +338,6 @@ def update_user_status_by_id(user_id, state):
       WHERE id = %s;
     """
   cursor.execute(query, (state, user_id))
-  connection.commit()
 
 # Update employee by id
 def update_employee_by_id(employee_id, **kwargs):
@@ -443,7 +414,6 @@ def update_pest_state_by_id(pest_id, state):
       WHERE id = %s;
     """
     cursor.execute(query, (state, pest_id))
-    connection.commit()
   except Exception as e:
     print(f"Error in update_pest_state_by_id: {e}")
     raise e
@@ -485,6 +455,5 @@ def  update_pest_by_id(pest_id, **kwargs):
       pest_id
     )
     cursor.execute(query, data)
-    connection.commit()
   except Exception as e:
     raise e
