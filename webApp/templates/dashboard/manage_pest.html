@@ -80,7 +80,7 @@
 
             <form method='POST'>
               <input type="hidden" name="pest_id" value="{{ pest.id }}" />
-
+              <p>{{ pest.other_images }}</p>
               {{ macro.form_field('Common Name','common_name', 'text', pest.common_name) }}
               {{ macro.form_field('Scientific Name','scientific_name', 'text', pest.scientific_name)
               }}

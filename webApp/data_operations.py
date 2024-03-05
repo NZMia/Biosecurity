@@ -54,8 +54,8 @@ def get_pest_images(pest_id):
   cursor = getCurrConn()
   query = """
     SELECT 
-      pest_images.id AS image_id,
-      pest_images.image AS image
+      pest_images.id,
+      pest_images.image
     FROM 
       pest_images
     WHERE
@@ -310,7 +310,6 @@ def create_user(**kwargs):
 
 
 def add_pests_image(pest_id, image):
-  
   cursor = getCurrConn()
   query = """
     INSERT INTO pest_images (pest_id, image)
@@ -414,7 +413,7 @@ def update_pest_state_by_id(pest_id, state):
     print(f"Error in update_pest_state_by_id: {e}")
     raise e
 
-def  update_pest_by_id(pest_id, **kwargs):
+def update_pest_by_id(pest_id, **kwargs):
   
   cursor = getCurrConn()
   
