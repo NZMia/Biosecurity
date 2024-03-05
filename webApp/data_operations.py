@@ -1,12 +1,14 @@
 from flask_login import current_user
 from webApp.config import getCurrConn
 
+# Get all roles
 def get_roles():
   cursor = getCurrConn()
   cursor.execute('SELECT * FROM roles')
   roles = cursor.fetchall()
   return roles
 
+# Get all positions
 def get_positions():
   
   cursor = getCurrConn()
@@ -14,6 +16,7 @@ def get_positions():
   positions = cursor.fetchall()
   return positions
 
+# Get all departments
 def get_departments():
   cursor = getCurrConn()
   try:
@@ -24,6 +27,7 @@ def get_departments():
     print(f"Error in get_departments: {e}")
     return None 
 
+# Get all states
 def get_pests():
   
   cursor = getCurrConn()
@@ -49,24 +53,29 @@ def get_pests():
       pest['image'] = pest['image'].decode('utf-8')
   return pests
 
-def get_pest_images(pest_id):
-  
+# Get all customers
+def get_customers(): 
   cursor = getCurrConn()
   query = """
     SELECT 
-      pest_images.id,
-      pest_images.image
+      customer.*,
+      users.email AS email,
+      roles.role AS role
     FROM 
-      pest_images
-    WHERE
-      pest_images.pest_id = %s
+      customer
+    JOIN users ON customer.user_id = users.id
+    JOIN roles ON users.role_id = roles.id
+    WHERE 
+      users.state_id = 1
   """
-  cursor.execute(query, (pest_id,))
-  pest_images = cursor.fetchall()
-  return pest_images
+  cursor.execute(query)
+  # Fetch all rows as tuples
+  customers= cursor.fetchall()
+ 
+  return customers
 
+# Get all employees by different roles
 def get_employees_by_role(role_id):
-  
   cursor = getCurrConn()
   query = """
     SELECT 
@@ -93,6 +102,36 @@ def get_employees_by_role(role_id):
 
   return employees
 
+# Get one pest by id
+def get_pest(pest_id):
+  cursor = getCurrConn()
+  query = """
+    SELECT * FROM pests WHERE pests.id = %s
+  """
+  cursor.execute(query, (pest_id,))
+  pest = cursor.fetchone()
+  if pest:
+    other_images = get_pest_images(pest_id)
+    pest['other_images'] = other_images
+  return pest
+
+# Get all images of a pest
+def get_pest_images(pest_id):
+  cursor = getCurrConn()
+  query = """
+    SELECT 
+      pest_images.id,
+      pest_images.image
+    FROM 
+      pest_images
+    WHERE
+      pest_images.pest_id = %s
+  """
+  cursor.execute(query, (pest_id,))
+  pest_images = cursor.fetchall()
+  return pest_images
+
+# Get current authenticated user( for session validation)
 def get_current_user():
 
   cursor = getCurrConn()
@@ -146,42 +185,22 @@ def get_current_user():
 
   return user_info
 
-def get_customers():
-  
-  cursor = getCurrConn()
-  query = """
-    SELECT 
-      customer.*,
-      users.email AS email,
-      roles.role AS role
-    FROM 
-      customer
-    JOIN users ON customer.user_id = users.id
-    JOIN roles ON users.role_id = roles.id
-    WHERE 
-      users.state_id = 1
-  """
-  cursor.execute(query)
-  # Fetch all rows as tuples
-  customers= cursor.fetchall()
- 
-  return customers
-
+# Get user by email (used for login/password reset...)
 def get_user_by_email(email):
-  
   cursor = getCurrConn()
   cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
   user = cursor.fetchone()
   return user
 
+# Get user by id
 def get_user_by_id(user_id):
   cursor = getCurrConn()
   cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
   user = cursor.fetchone()
   return user
 
+# Check if pest exist
 def is_pest_exist(common_name, scientific_name):
-  
   cursor = getCurrConn()
   cursor.execute('SELECT id FROM pests WHERE common_name = %s OR scientific_name = %s', (common_name, scientific_name))
   id = cursor.fetchone()
@@ -194,6 +213,7 @@ def is_pest_image_exist(pest_id, image):
   id = cursor.fetchone()
   return id
 
+# Create and Save pest primary image due to the fact that pest can have multiple images, and pest_images and pests tables are related, so we need to save the primary image first, get the last inserted id and insert it into pests table
 def save_pest_image(image):
   cursor = getCurrConn()
   query = """
@@ -204,6 +224,7 @@ def save_pest_image(image):
   img_id = cursor.lastrowid
   return img_id
 
+# Create new pest
 def create_pest(**kwargs):
   
   cursor = getCurrConn()
@@ -308,7 +329,7 @@ def create_user(**kwargs):
     """
     cursor.execute(customer_query, (user_id, first_name, last_name, address, phone))
 
-
+# Create new pest image, not primary
 def add_pests_image(pest_id, image):
   cursor = getCurrConn()
   query = """
@@ -317,13 +338,14 @@ def add_pests_image(pest_id, image):
   """
   cursor.execute(query, (pest_id, image))
 
-# Update user state and password
+# Update user password
 def update_user_password_by_email(email, password):
   
   cursor = getCurrConn()
   
   cursor.execute('UPDATE users SET password = %s WHERE email = %s', (password, email))
 
+# Update user state by id
 def update_user_status_by_id(user_id, state):
   
   cursor = getCurrConn()
@@ -370,7 +392,6 @@ def update_employee_by_id(employee_id, **kwargs):
 
 # Update customer by id
 def update_customer_by_id(user_id, **kwargs):
-  
   cursor = getCurrConn()
   try:
     query = """
@@ -411,8 +432,8 @@ def update_pest_state_by_id(pest_id, state):
     print(f"Error in update_pest_state_by_id: {e}")
     raise e
 
+# Update pest
 def update_pest_by_id(pest_id, **kwargs):
-  
   cursor = getCurrConn()
   
   try:

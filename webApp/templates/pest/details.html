@@ -1,0 +1,72 @@
+{% extends "layout/general_base.html" %}
+{% import 'components/card.html' as macros %}
+
+{% block title %}PESTS{% endblock %}
+{%block hero_text %}
+<h1>Welcome to Join Us</h1>
+{% endblock %}
+{% block body %}
+<div class="container row d-flex mt-4 m-auto">
+  <div class="col-4 d-flex flex-column">
+    <div id="simple-list-example" class="d-flex flex-column gap-2 list-group text-center">
+      <a class="list-group-item list-group-item-action" href="#simple-list-item-1">Common Name</a>
+      <a class="list-group-item list-group-item-action" href="#simple-list-item-2">Scientific Name</a>
+      <a class="list-group-item list-group-item-action" href="#simple-list-item-3">Description</a>
+      <a class="list-group-item list-group-item-action" href="#simple-list-item-4">Distinctive Features</a>
+      <a class="list-group-item list-group-item-action" href="#simple-list-item-5">Size</a>
+      <a class="list-group-item list-group-item-action" href="#simple-list-item-6">Droppings</a>
+      <a class="list-group-item list-group-item-action" href="#simple-list-item-7">Footprint</a>
+      <a class="list-group-item list-group-item-action" href="#simple-list-item-8">Distribution</a>
+      <a class="list-group-item list-group-item-action" href="#simple-list-item-9">Impacts</a>
+      <a class="list-group-item list-group-item-action" href="#simple-list-item-10">Control Methods</a>
+    </div>
+    <div class="container">
+      <div id="imageCarousel" class="carousel slide h-5" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          {% for image in pest['other_images'] %}
+          <div class="carousel-item {% if loop.first %}active{% endif %}">
+            <img src="{{ url_for('static', filename='uploads/' + image['image'].decode('utf-8')) }}" class="d-block"
+              alt="Image {{ image['id'] }}">
+          </div>
+          {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-8">
+    <div id="simple-list-scrollspy" class="scrollspy-example" data-bs-spy="scroll" data-bs-target="#simple-list-example"
+      data-bs-offset="0" data-bs-smooth-scroll="true" tabindex="0">
+      <h4 id="simple-list-item-1">Common Name</h4>
+      <p>{{ pest['common_name'] }}</p>
+      <h4 id="simple-list-item-2">Scientific Name</h4>
+      <p>{{ pest['scientific_name'] }}</p>
+      <h4 id="simple-list-item-3">Description</h4>
+      <p>{{ pest['description'] }}</p>
+      <h4 id="simple-list-item-4">Distinctive Features</h4>
+      <p>{{ pest['distinctive_features'] }}</p>
+      <h4 id="simple-list-item-5">Size</h4>
+      <p>{{ pest['size'] }}</p>
+      <h4 id="simple-list-item-6">Droppings</h4>
+      <p>{{ pest['droppings'] }}</p>
+      <h4 id="simple-list-item-7">Footprint</h4>
+      <p>{{ pest['footprint'] }}</p>
+      <h4 id="simple-list-item-8">Distribution</h4>
+      <p>{{ pest['distribution'] }}</p>
+      <h4 id="simple-list-item-9">Impacts</h4>
+      <p>{{ pest['impacts'] }}</p>
+      <h4 id="simple-list-item-10">Control Methods</h4>
+      <p>{{ pest['control_methods'] }}</p>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

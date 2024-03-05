@@ -13,14 +13,14 @@
   <div class="row m-5">
     <!-- loop through the pests -->
     {% for pest in pests %}
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md-3 col-sm-6 d-flex align-items-stretch">
       {% call macros.card(
       card_title=pest['common_name'],
       class_name='card-left-border-green',
       img_url=url_for('static', filename='uploads/' + pest.image)) %}
       {# Additional content for the card, if any #}
       <p class="card-text text-truncate">{{ pest.description }}</p>
-      <a href="#" class="btn btn-outline-success">View Details</a>
+      <a href="{{ url_for('general_view.pest_detail', id=pest.id) }}" class="btn btn-outline-success">View Details</a>
       {% endcall %}
     </div>
     {% endfor %}

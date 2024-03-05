@@ -1,7 +1,7 @@
 {% macro card(card_title='', class_name='', img_url='') -%}
-<div class="card mb-4 {{ class_name }}">
+<div class="card mb-4 flex-grow-1 {{ class_name }}">
   {% if img_url %}
-  <img src={{ img_url }} class="card-img-top" alt="...">
+  <img src={{ img_url }} class="card-img-top card-img-hight" alt="...">
   {% endif %}
   <div class="card-body">
     <div class="card-title">
