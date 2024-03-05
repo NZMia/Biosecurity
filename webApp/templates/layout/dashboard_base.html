@@ -9,7 +9,7 @@
   <div class="row flex-nowrap">
     <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-success-subtle">
       <div
-        class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 position-sticky top-0 text-center">
+        class="d-flex flex-column align-items-center align-items-sm-start px-1 pt-2 text-white min-vh-100 position-sticky top-0 text-center">
         <h3 class='mt-4'>
           <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-success text-decoration-none ">
             Biosecurity
@@ -24,17 +24,20 @@
             </a>
           </li>
 
-          <!-- MANAGE STAFF -->
+          <!-- MANAGE STAFF: if role_id === 2 admin can view it -->
+          {% if current_user.role_id == 2 %}
           <li class='mt-4'>
             <a href="/manage_staff" class="nav-link px-0 align-middle text-muted">
               <span class="ms-1 d-none d-sm-inline p-2">Manage Staff</span>
             </a>
           </li>
+          {% endif %}
 
-          <!-- MANAGE PEST CONTROLLER -->
+          <!-- MANAGE PEST CONTROLLER: if rold.id != 3(staff and admin) can view it -->
+          {% if current_user.role_id != 3 %}
           <li class='mt-4'>
             <a href="/manage_customer" class="nav-link px-0 align-middle text-muted">
-              <span class="ms-1 d-none d-sm-inline p-2 text-muted">Manage Pest Controller</span>
+              <span class="ms-1 d-none d-sm-inline p-2">Manage Pest Controller</span>
             </a>
           </li>
 
@@ -44,14 +47,24 @@
               <span class="ms-1 d-none d-sm-inline p-2 text-muted">Manage Pest</span>
             </a>
           </li>
+          {% endif %}
+
+          {% if current_user.role_id == 3 %}
+          <li class='mt-4'>
+            <a href="/pest" class="nav-link px-0 align-middle text-muted">
+              <span class="ms-1 d-none d-sm-inline p-2 text-muted">View Pest</span>
+            </a>
+          </li>
+          {% endif %}
         </ul>
         <hr>
         <div class="dropdown pb-4">
           <a href="#" class="d-flex align-items-center text-muted text-decoration-none dropdown-toggle"
             id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
             <span class="d-none d-sm-inline p-2 mx-1 text-muted">
-
-              Mia Zhang
+              {% if current_user.is_authenticated %}
+              {{ current_user.email }}
+              {% endif %}
             </span>
           </a>
           <ul class="dropdown-menu dropdown-menu-dark text-small shadow">

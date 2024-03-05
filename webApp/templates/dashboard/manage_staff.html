@@ -74,7 +74,7 @@ dashboard {% endblock%} {% block content %}
             {{ macro.form_field('Last Name', 'lname', 'text', employee.last_name) }}
             {{ macro.form_field('Department','department', 'select', employee.department_id,options=departments) }}
             {{ macro.form_field('Position', 'position', 'select', employee.position_id, options=positions) }}
-            {{ macro.form_field('Work Phone', 'wphone', 'text', employee.work_phone) }}
+            {{ macro.form_field('Work Phone', 'wphone', 'number', employee.work_phone) }}
             {{ macro.form_field('Hire Date', 'hired_at', 'text', employee.hired_at, readonly=true) }}
 
             <div class="modal-footer">
@@ -116,7 +116,7 @@ dashboard {% endblock%} {% block content %}
         {{ macro.form_field('Last Name', 'lname', 'text', '') }}
         {{ macro.form_field('Department', 'department_id', 'select', '', options=departments)}}
         {{ macro.form_field('Position', 'position_id', 'select', '', options=positions) }}
-        {{ macro.form_field('Work Phone', 'wphone', 'text', '') }}
+        {{ macro.form_field('Work Phone', 'wphone', 'number', '') }}
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Cancel

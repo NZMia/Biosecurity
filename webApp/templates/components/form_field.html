@@ -21,7 +21,8 @@
       %}readonly{% endif %}>{{ value }}</textarea>
     {% else %}
     <input type="{{ type }}" class="form-control{% if readonly %}-plaintext{% endif %}" id="{{ id }}"
-      value="{{ value }}" name="{{ id }}" {% if readonly %}readonly{% endif %}>
+      value="{{ value }}" name="{{ id }}" {% if readonly %}readonly{% endif %} {% if type=='tel'
+      %}pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" {% endif %}>
     {% endif %}
   </div>
 </div>

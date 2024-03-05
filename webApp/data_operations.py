@@ -98,7 +98,7 @@ def get_current_user():
   cursor = getCurrConn()
   user_id = current_user.id
   role_id = current_user.role_id
-
+  
   if role_id != 3:
     query = """
       SELECT 
@@ -131,7 +131,7 @@ def get_current_user():
       FROM 
           customer
       JOIN 
-          user ON customer.user_id = users.id
+          users ON customer.user_id = users.id
       JOIN 
           roles ON users.role_id = roles.id
       WHERE 
@@ -364,7 +364,6 @@ def update_employee_by_id(employee_id, **kwargs):
     )
 
     cursor.execute(query, data)
-    connection.commit()
   except Exception as e:
     print(f"Error in update_employee_by_id: {e}")
     raise e
@@ -393,7 +392,6 @@ def update_customer_by_id(user_id, **kwargs):
       user_id
     )
     cursor.execute(query, data)
-    connection.commit()
   except Exception as e:
     print(f"Error in update_customer_by_id: {e}")
     raise e
