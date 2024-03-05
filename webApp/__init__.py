@@ -1,4 +1,4 @@
-from flask import Flask, g
+from flask import Flask, render_template
 from dotenv import load_dotenv
 from flask_login import LoginManager
 import os
@@ -35,10 +35,18 @@ def create_app():
   login_manager.login_view = 'auth.login'
   login_manager.init_app(app)
 
+  # Custom 404 error handler
+  @app.errorhandler(404)
+  def page_not_found(error):
+      return render_template('500.html'), 404
+
+  # Custom 500 error handler
+  @app.errorhandler(500)
+  def internal_server_error(error):
+    return render_template('500.html'), 500
+
   @login_manager.user_loader
   def load_user(id):
-
-
     user_data = get_user_by_id(id)
 
     if user_data:

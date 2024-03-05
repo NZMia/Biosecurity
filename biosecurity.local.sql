@@ -118,14 +118,28 @@ INSERT INTO state (state) VALUES ('active'),('inactive');
 
 -- Insert Admin User
 INSERT INTO users (email, password, role_id) 
-VALUES ('admin@biosecurity.co.nz', 'scrypt:32768:8:1$ag4HTO6GachMQuyn$fd4304001c25127e473fc0241761abf9dd4cb54c663066e2f52e94807bc47948f7c17254e78d80bd78ecbfca5d658cd22748e387da63c42f862486a6fe3e3be3', 2);
+VALUES ('admin@biosecurity.co.nz', 'scrypt:32768:8:1$IH8e6yRLPq5TCo64$4cfc75c5daf26761ba3e3b4839911d4857da991ee249cb4144ba9d3a57036495320f122ea488ab3aed54b9d0d49571367bfb361606be2ca34864fa66c22b6a35', 2);
 
 -- Insert Staff Users
 INSERT INTO users (email, password, role_id) 
 VALUES 
-  ('staff1@biosecurity.co.nz', 'scrypt:32768:8:1$43wnQTlQhdFFI6nC$d94a54fadbe745da9680c99dc8689ad0385a75b660e1e88611beb184b324ac1f05dbbdc4570dae98583785814af8a16b6037299db4874e4e1903a8a821c744af', 1),
-  ('staff2@biosecurity.co.nz', 'scrypt:32768:8:1$43wnQTlQhdFFI6nC$d94a54fadbe745da9680c99dc8689ad0385a75b660e1e88611beb184b324ac1f05dbbdc4570dae98583785814af8a16b6037299db4874e4e1903a8a821c744af', 1),
-  ('staff3@biosecurity.co.nz', 'scrypt:32768:8:1$43wnQTlQhdFFI6nC$d94a54fadbe745da9680c99dc8689ad0385a75b660e1e88611beb184b324ac1f05dbbdc4570dae98583785814af8a16b6037299db4874e4e1903a8a821c744af', 1);
+  ('staff1@biosecurity.co.nz', 'scrypt:32768:8:1$UXGHjf1wQ4PaOygP$17aabc240f09a50b7684e58ee4977c10bbee0ca5fdfc78999999a9f262a0f064ad25f77a956f9a5086303c31fdaa730cd3232155e88c3acbb0f2d36702e2952a', 1),
+  ('staff2@biosecurity.co.nz', 'scrypt:32768:8:1$UXGHjf1wQ4PaOygP$17aabc240f09a50b7684e58ee4977c10bbee0ca5fdfc78999999a9f262a0f064ad25f77a956f9a5086303c31fdaa730cd3232155e88c3acbb0f2d36702e2952a', 1),
+  ('staff3@biosecurity.co.nz', 'scrypt:32768:8:1$UXGHjf1wQ4PaOygP$17aabc240f09a50b7684e58ee4977c10bbee0ca5fdfc78999999a9f262a0f064ad25f77a956f9a5086303c31fdaa730cd3232155e88c3acbb0f2d36702e2952a', 1);
+
+-- Insert Pest controller Users
+INSERT INTO users (email, password, role_id) 
+VALUES 
+  ('customer1@biosecurity.co.nz', 'scrypt:32768:8:1$xDu0gQ6VZ6mLPcOh$59e7f6096efd7114e3559351ab9c45e07cefec7f00bfd9f793173b0893c0ad72e88f6326629cd464aeb1de5e8dd952042f017ba51be25929beca8c54b3760546
+', 3),
+  ('customer2@biosecurity.co.nz', 'scrypt:32768:8:1$xDu0gQ6VZ6mLPcOh$59e7f6096efd7114e3559351ab9c45e07cefec7f00bfd9f793173b0893c0ad72e88f6326629cd464aeb1de5e8dd952042f017ba51be25929beca8c54b3760546
+', 3),
+   ('customer3@biosecurity.co.nz', 'scrypt:32768:8:1$xDu0gQ6VZ6mLPcOh$59e7f6096efd7114e3559351ab9c45e07cefec7f00bfd9f793173b0893c0ad72e88f6326629cd464aeb1de5e8dd952042f017ba51be25929beca8c54b3760546
+', 3),
+	('customer4@biosecurity.co.nz', 'scrypt:32768:8:1$xDu0gQ6VZ6mLPcOh$59e7f6096efd7114e3559351ab9c45e07cefec7f00bfd9f793173b0893c0ad72e88f6326629cd464aeb1de5e8dd952042f017ba51be25929beca8c54b3760546
+', 3),
+	('customer5@biosecurity.co.nz', 'scrypt:32768:8:1$xDu0gQ6VZ6mLPcOh$59e7f6096efd7114e3559351ab9c45e07cefec7f00bfd9f793173b0893c0ad72e88f6326629cd464aeb1de5e8dd952042f017ba51be25929beca8c54b3760546
+', 3);
 
 -- Insert employee 
 INSERT INTO employee (user_id, first_name, last_name)
@@ -133,4 +147,15 @@ VALUES
 	(1, 'Nora', 'Wang'),
 	(2, 'Harold', 'Zhang'),
 	(3, 'Luna', 'Wang'),
-	(4, 'Mia', 'Zhang')
+	(4, 'Mia', 'Zhang');
+    
+-- Insert customer
+INSERT INTO customer (user_id, first_name, last_name)
+VALUES
+	(5, 'Nora', 'Wang'),
+	(6, 'Harold', 'Zhang'),
+	(7, 'Luna', 'Wang'),
+	(8, 'Mia', 'Zhang'),
+    (9, 'Mia', 'Zhang');
+
+	

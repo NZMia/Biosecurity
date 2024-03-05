@@ -4,7 +4,17 @@ from flask_login import login_user, login_required, logout_user
 from .data_operations import get_roles, get_user_by_email, create_user, update_user_password_by_email
 from .models import User
 
+
 auth  = Blueprint('auth', __name__)
+
+def is_valid_password(passwd):
+     
+  SpecialSym =['$', '@', '#', '%']
+  val = True
+  if len(passwd) < 8 or not any(char in SpecialSym for char in passwd):
+      val = False
+  
+  return val
 
 def create_new_user(
     email, 
@@ -23,10 +33,10 @@ def create_new_user(
   try:
     if user:
       flash('Email already exists.', category='error')
-    elif len(pwd) < 8:
-      flash('Password must be at least 8 characters.', category='error')
     elif pwd != pwd1:
       flash('Passwords don\'t match.', category='error')
+    elif not is_valid_password(pwd):
+      flash('Password must be at least 8 characters and one of the symbols $@# .', category='error')
     else:
       hashed_pwd = generate_password_hash(pwd)
       create_user(
@@ -160,8 +170,8 @@ def reset_password():
         flash('current password is incorrect.', category='error')
       if pwd != pwd1:
         flash('Passwords don\'t match.', category='error')
-      elif len(pwd) < 8:
-        flash('Password must be at least 8 characters.', category='error')
+      elif not is_valid_password(pwd):
+        flash('Password must be at least 8 characters and one of the symbols $@#. ', category='error')
       else:
         hashed_pwd = generate_password_hash(pwd)
         update_user_password_by_email(email, hashed_pwd)

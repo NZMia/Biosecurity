@@ -5,6 +5,7 @@ from webApp.data_operations import get_pests, get_pest
 
 general_view  = Blueprint('general_view', __name__)
 
+
 @general_view.route('/')
 def home():
   return render_template('home.html')
