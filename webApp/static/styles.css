@@ -6,6 +6,18 @@
   background-size: cover;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
 }
+.hero-section::before {
+  content: '';
+  background-image: url('bg.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.75;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 
 .dashboard-nav {
   box-shadow: 20px 20px rgba(0, 0, 0, 0.5);
