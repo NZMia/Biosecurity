@@ -109,7 +109,7 @@ def register():
     pwd1 = request.form.get('re-pwd')
     fname = request.form.get('fname')
     lname = request.form.get('lname')
-    role_id = request.form.get('role')
+    role_id = 3
 
     try:
       # Create new user
@@ -120,11 +120,11 @@ def register():
           role_id=role_id,
           first_name=fname,
           last_name=lname,
-          address=None,  # Set default or adjust as needed
-          phone=None,  # Set default or adjust as needed
-          work_phone=None,  # Set default or adjust as needed
-          department_id=None,  # Set default or adjust as needed
-          position_id=None,  # Set default or adjust as needed
+          address=None,  
+          phone=None,
+          work_phone=None,
+          department_id=None,
+          position_id=None,
       )
     
       # Retrieve the newly created user

@@ -32,9 +32,8 @@
     <label for="re-pwd" class="form-label">Repeat Password</label>
     <input type="password" class="form-control" id="re-pwd" name="re-pwd" />
   </div>
-  {% if roles %}
+  <!-- {% if roles %}
   <div class="col-md-12">
-    <!-- dropdown -->
     <label for="role" class="form-label">Roles</label>
     <select id="role" class="form-select" name="role">
       {% for role in roles %}
@@ -45,7 +44,7 @@
       {% endfor %}
     </select>
   </div>
-  {% endif %}
+  {% endif %} -->
 
   <div class="d-grid gap-2 mt-5">
     <button class="btn bg-success-subtle rounded-pill" type="submit">Register</button>
@@ -54,7 +53,6 @@
   <!-- Login buttons -->
   <div class="text-center gap-2 mb-4">
     <p>Already have an account? <a href="/login">Login</a>
-      <!-- <p>Forgot password? <a href="/forgot-password">Forgot password</a></p> -->
   </div>
 </form>
 {% endblock %}
