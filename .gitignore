@@ -2,3 +2,5 @@ venv
 .env
 /webApp/__pycache__/
 __pycache__/
+/webApp/static/uploads/
+/webApp/config/
