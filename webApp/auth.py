@@ -152,11 +152,9 @@ def register():
 
 
 @auth.route('/reset-password', methods=['GET', 'POST'])
-@login_required
 def reset_password():
   if request.method == 'POST':
     email = request.form.get('email')
-    old_pwd = request.form.get('old-pwd')
     pwd = request.form.get('pwd')
     pwd1 = request.form.get('re-pwd')
 
@@ -165,9 +163,6 @@ def reset_password():
     if not user_data:
       flash('Email does not exist.', category='error')
     else:
-      
-      if not check_password_hash(user_data['password'], old_pwd):
-        flash('current password is incorrect.', category='error')
       if pwd != pwd1:
         flash('Passwords don\'t match.', category='error')
       elif not is_valid_password(pwd):

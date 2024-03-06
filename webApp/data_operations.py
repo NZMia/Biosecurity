@@ -1,30 +1,34 @@
 from flask_login import current_user
-from webApp.config import getCurrConn, closeConnection
+from webApp import get_db
 
 # Get all roles
 def get_roles():
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
+
   cursor.execute('SELECT * FROM roles')
   roles = cursor.fetchall()
-  closeConnection(cursor)
+  
   return roles
 
 # Get all positions
 def get_positions():
   
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   cursor.execute('SELECT * FROM positions')
   positions = cursor.fetchall()
-  closeConnection(cursor)
+  
   return positions
 
 # Get all departments
 def get_departments():
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   try:
     cursor.execute('SELECT * FROM departments')
     departments = cursor.fetchall()
-    closeConnection(cursor)
+    
     return departments
   except Exception as e:
     print(f"Error in get_departments: {e}")
@@ -33,7 +37,8 @@ def get_departments():
 # Get all states
 def get_pests():
   
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   query = """
     SELECT 
       pests.*, 
@@ -54,12 +59,13 @@ def get_pests():
 
     if 'image' in pest:
       pest['image'] = pest['image'].decode('utf-8')
-  closeConnection(cursor)
+  
   return pests
 
 # Get all customers
 def get_customers(): 
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   query = """
     SELECT 
       customer.*,
@@ -75,12 +81,13 @@ def get_customers():
   cursor.execute(query)
   # Fetch all rows as tuples
   customers= cursor.fetchall()
-  closeConnection(cursor)
+  
   return customers
 
 # Get all employees by different roles
 def get_employees_by_role(role_id):
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   query = """
     SELECT 
       employee.*, 
@@ -103,12 +110,13 @@ def get_employees_by_role(role_id):
   cursor.execute(query, (role_id,))
    # Fetch all rows as tuples
   employees = cursor.fetchall()
-  closeConnection(cursor)
+  
   return employees
 
 # Get one pest by id
 def get_pest(pest_id):
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   query = """
     SELECT * FROM pests WHERE pests.id = %s
   """
@@ -117,12 +125,13 @@ def get_pest(pest_id):
   if pest:
     other_images = get_pest_images(pest_id)
     pest['other_images'] = other_images
-  closeConnection(cursor)
+  
   return pest
 
 # Get all images of a pest
 def get_pest_images(pest_id):
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   query = """
     SELECT 
       pest_images.id,
@@ -134,13 +143,14 @@ def get_pest_images(pest_id):
   """
   cursor.execute(query, (pest_id,))
   pest_images = cursor.fetchall()
-  closeConnection(cursor)
+  
   return pest_images
 
 # Get current authenticated user( for session validation)
 def get_current_user():
 
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   user_id = current_user.id
   role_id = current_user.role_id
   
@@ -193,52 +203,58 @@ def get_current_user():
 
 # Get user by email (used for login/password reset...)
 def get_user_by_email(email):
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
   user = cursor.fetchone()
-  closeConnection(cursor)
+  
   return user
 
 # Get user by id
 def get_user_by_id(user_id):
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
   user = cursor.fetchone()
-  closeConnection(cursor)
+  
   return user
 
 # Check if pest exist
 def is_pest_exist(common_name, scientific_name):
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   cursor.execute('SELECT id FROM pests WHERE common_name = %s OR scientific_name = %s', (common_name, scientific_name))
   id = cursor.fetchone()
-  closeConnection(cursor)
+  
   return id
 
 def is_pest_image_exist(pest_id, image):
   
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   cursor.execute('SELECT id FROM pest_images WHERE pest_id = %s AND image = %s', (pest_id, image))
   id = cursor.fetchone()
-  closeConnection(cursor)
+  
   return id
 
 # Create and Save pest primary image due to the fact that pest can have multiple images, and pest_images and pests tables are related, so we need to save the primary image first, get the last inserted id and insert it into pests table
 def save_pest_image(image):
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   query = """
     INSERT INTO pest_images (image)
     VALUES (%s)
   """
   cursor.execute(query, (image,))
   img_id = cursor.lastrowid
-  closeConnection(cursor)
+  
   return img_id
 
 # Create new pest
 def create_pest(**kwargs):
   
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
 
   try: 
     common_name = kwargs.get('common_name')
@@ -303,13 +319,14 @@ def create_pest(**kwargs):
   except Exception as e:
     print(f"Error in create_pest: {e}")
     raise e
-  finally:
-    closeConnection(cursor)
+  
+    
 
 # Create new user (can be employee or customer)
 def create_user(**kwargs):
   
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   try:
     user_query = """
       INSERT INTO users (email, password, role_id)
@@ -348,12 +365,13 @@ def create_user(**kwargs):
   except Exception as e:
     print(f"Error in create_user: {e}")
     raise e
-  finally:
-    closeConnection(cursor)
+  
+    
 
 # Create new pest image, not primary
 def add_pests_image(pest_id, image):
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   try:
     query = """
       INSERT INTO pest_images (pest_id, image)
@@ -363,25 +381,27 @@ def add_pests_image(pest_id, image):
   except Exception as e:
     print(f"Error in add_pests_image: {e}")
     raise e
-  finally:
-    closeConnection(cursor)
+  
+    
 
 # Update user password
 def update_user_password_by_email(email, password):
   
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   try:
     cursor.execute('UPDATE users SET password = %s WHERE email = %s', (password, email))
   except Exception as e:
     print(f"Error in update_user_password_by_email: {e}")
     raise e
-  finally:
-    closeConnection(cursor)
+  
+    
 
 # Update user state by id
 def update_user_status_by_id(user_id, state):
   
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   try:
     query ="""
         UPDATE users
@@ -392,13 +412,14 @@ def update_user_status_by_id(user_id, state):
   except Exception as e:
     print(f"Error in update_user_status_by_id: {e}")
     raise e
-  finally:
-    closeConnection(cursor)
+  
+    
 
 # Update employee by id
 def update_employee_by_id(employee_id, **kwargs):
   
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   try:
     query = """
       UPDATE employee
@@ -428,12 +449,13 @@ def update_employee_by_id(employee_id, **kwargs):
   except Exception as e:
     print(f"Error in update_employee_by_id: {e}")
     raise e
-  finally:
-    closeConnection(cursor)
+  
+    
 
 # Update customer by id
 def update_customer_by_id(user_id, **kwargs):
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   try:
     query = """
       UPDATE customer
@@ -457,14 +479,15 @@ def update_customer_by_id(user_id, **kwargs):
   except Exception as e:
     print(f"Error in update_customer_by_id: {e}")
     raise e
-  finally:
-    closeConnection(cursor)
+  
+    
 
 # Update pest state by id
 def update_pest_state_by_id(pest_id, state):
   try:
     
-    cursor = getCurrConn()
+    connection = get_db()
+    cursor = connection.cursor(dictionary=True)
     query = """
       UPDATE pests
       SET state_id = (SELECT id FROM state WHERE state = %s)
@@ -474,12 +497,13 @@ def update_pest_state_by_id(pest_id, state):
   except Exception as e:
     print(f"Error in update_pest_state_by_id: {e}")
     raise e
-  finally:
-    closeConnection(cursor)
+  
+    
 
 # Update pest
 def update_pest_by_id(pest_id, **kwargs):
-  cursor = getCurrConn()
+  connection = get_db()
+  cursor = connection.cursor(dictionary=True)
   
   try:
     query = """
@@ -516,5 +540,5 @@ def update_pest_by_id(pest_id, **kwargs):
     cursor.execute(query, data)
   except Exception as e:
     raise e
-  finally:
-    closeConnection(cursor)
+  
+    

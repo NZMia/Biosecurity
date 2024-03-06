@@ -1,12 +1,27 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, g
 from dotenv import load_dotenv
 from flask_login import LoginManager
 import os
-from .data_operations import get_user_by_id
 from .models import User
-from .config import Config, getCurrConn
+from .config import Config
+import mysql.connector
+
 
 load_dotenv()
+
+def get_db():
+    if 'db' not in g:
+      g.db = mysql.connector.connect(
+        host=Config.MYSQL_HOST,
+        user=Config.MYSQL_USER,
+        password=Config.MYSQL_PASSWORD,
+        database=Config.MYSQL_DB,
+        autocommit=True
+      )
+
+    return g.db
+
+
 
 def create_app():
   app = Flask(__name__)
@@ -20,8 +35,6 @@ def create_app():
   app.config['UPLOAD'] = upload_folder
   app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
   app.config['ALLOWED_IMAGE_EXTENSIONS'] = ['PNG', 'JPG', 'JPEG', 'GIF']
-
-  getCurrConn()
 
   from webApp.auth import auth
   from webApp.general_view import general_view
@@ -47,8 +60,11 @@ def create_app():
 
   @login_manager.user_loader
   def load_user(id):
-    user_data = get_user_by_id(id)
-    
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute('SELECT * FROM users WHERE id = %s', (id,))
+
+    user_data = cursor.fetchone()
     if user_data:
         user = User(
           user_id=user_data['id'],
@@ -62,4 +78,10 @@ def create_app():
 
     return None  # User not found
 
+  @app.teardown_appcontext
+  def teardown_db(exception):
+    db = g.pop('db', None)
+
+    if db is not None:
+        db.close()
   return app
