@@ -48,7 +48,7 @@ def create_app():
   @login_manager.user_loader
   def load_user(id):
     user_data = get_user_by_id(id)
-
+    
     if user_data:
         user = User(
           user_id=user_data['id'],

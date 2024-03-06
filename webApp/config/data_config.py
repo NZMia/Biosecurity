@@ -18,3 +18,7 @@ def getCurrConn():
     )
     connection = dbconn.cursor(dictionary=True)
   return connection
+
+def closeConnection(cursor):
+    dbconn.close()
+    connection.close()

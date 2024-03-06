@@ -130,32 +130,27 @@ VALUES
 -- Insert Pest controller Users
 INSERT INTO users (email, password, role_id) 
 VALUES 
-  ('customer1@biosecurity.co.nz', 'scrypt:32768:8:1$xDu0gQ6VZ6mLPcOh$59e7f6096efd7114e3559351ab9c45e07cefec7f00bfd9f793173b0893c0ad72e88f6326629cd464aeb1de5e8dd952042f017ba51be25929beca8c54b3760546
-', 3),
-  ('customer2@biosecurity.co.nz', 'scrypt:32768:8:1$xDu0gQ6VZ6mLPcOh$59e7f6096efd7114e3559351ab9c45e07cefec7f00bfd9f793173b0893c0ad72e88f6326629cd464aeb1de5e8dd952042f017ba51be25929beca8c54b3760546
-', 3),
-   ('customer3@biosecurity.co.nz', 'scrypt:32768:8:1$xDu0gQ6VZ6mLPcOh$59e7f6096efd7114e3559351ab9c45e07cefec7f00bfd9f793173b0893c0ad72e88f6326629cd464aeb1de5e8dd952042f017ba51be25929beca8c54b3760546
-', 3),
-	('customer4@biosecurity.co.nz', 'scrypt:32768:8:1$xDu0gQ6VZ6mLPcOh$59e7f6096efd7114e3559351ab9c45e07cefec7f00bfd9f793173b0893c0ad72e88f6326629cd464aeb1de5e8dd952042f017ba51be25929beca8c54b3760546
-', 3),
-	('customer5@biosecurity.co.nz', 'scrypt:32768:8:1$xDu0gQ6VZ6mLPcOh$59e7f6096efd7114e3559351ab9c45e07cefec7f00bfd9f793173b0893c0ad72e88f6326629cd464aeb1de5e8dd952042f017ba51be25929beca8c54b3760546
-', 3);
+  ('customer1@biosecurity.co.nz', 'scrypt:32768:8:1$ig0Kzo3m5MxI8h3b$008002fbfc61109efedc94f0b5328ca5c00e5b4d7c900a385386873714e1c7f12c9e865c5f7f19b24d08308f25ad3e46a44af3e8276e309b4a9e3bd1b2d5caa2', 3),
+  ('customer2@biosecurity.co.nz', 'scrypt:32768:8:1$ig0Kzo3m5MxI8h3b$008002fbfc61109efedc94f0b5328ca5c00e5b4d7c900a385386873714e1c7f12c9e865c5f7f19b24d08308f25ad3e46a44af3e8276e309b4a9e3bd1b2d5caa2', 3),
+  ('customer3@biosecurity.co.nz', 'scrypt:32768:8:1$ig0Kzo3m5MxI8h3b$008002fbfc61109efedc94f0b5328ca5c00e5b4d7c900a385386873714e1c7f12c9e865c5f7f19b24d08308f25ad3e46a44af3e8276e309b4a9e3bd1b2d5caa2', 3),
+  ('customer4@biosecurity.co.nz', 'scrypt:32768:8:1$ig0Kzo3m5MxI8h3b$008002fbfc61109efedc94f0b5328ca5c00e5b4d7c900a385386873714e1c7f12c9e865c5f7f19b24d08308f25ad3e46a44af3e8276e309b4a9e3bd1b2d5caa2', 3),
+  ('customer5@biosecurity.co.nz', 'scrypt:32768:8:1$ig0Kzo3m5MxI8h3b$008002fbfc61109efedc94f0b5328ca5c00e5b4d7c900a385386873714e1c7f12c9e865c5f7f19b24d08308f25ad3e46a44af3e8276e309b4a9e3bd1b2d5caa2', 3);
 
 -- Insert employee 
 INSERT INTO employee (user_id, first_name, last_name)
 VALUES
-	(1, 'Nora', 'Wang'),
-	(2, 'Harold', 'Zhang'),
-	(3, 'Luna', 'Wang'),
-	(4, 'Mia', 'Zhang');
+	(1, 'NoraA', 'Wang'),
+	(2, 'HaroldS', 'Zhang'),
+	(3, 'LunaS', 'Wang'),
+	(4, 'MiaS', 'Zhang');
     
 -- Insert customer
 INSERT INTO customer (user_id, first_name, last_name)
 VALUES
-	(5, 'Nora', 'Wang'),
-	(6, 'Harold', 'Zhang'),
-	(7, 'Luna', 'Wang'),
-	(8, 'Mia', 'Zhang'),
-    (9, 'Mia', 'Zhang');
+	(5, 'NoraC', 'Wang'),
+	(6, 'HaroldC', 'Zhang'),
+	(7, 'LunaC', 'Wang'),
+	(8, 'MiaC', 'Zhang'),
+  (9, 'MiaC', 'Zhang');
 
 	
