@@ -7,7 +7,12 @@
 {% block hero %}
 <div class="hero-section h-500">
   {% include 'components/nav.html' %}
-  <div class="hero-text">{% block hero_text %} {% endblock %}</div>
+  <div class="hero-text">
+    {% if current_user.is_authenticated %}
+    <h3>Welcome {{ current_user.email }}</h3>
+    {% endif %}
+    {% block hero_text %} {% endblock %}
+  </div>
 </div>
 {% endblock %}
 

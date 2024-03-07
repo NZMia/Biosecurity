@@ -17,7 +17,24 @@
           <a class="nav-link"
             href="https://web.archive.org/web/20220122172202/http://www.pestdetective.org.nz/culprits/">Sources</a>
         </li>
-        <li class="nav-item dropdown">
+
+        {% if current_user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/register">Register</a>
+        </li>
+        {% endif%}
+
+        <!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             {% if current_user.is_authenticated %}
             {{ current_user.email }}
@@ -37,7 +54,7 @@
             <li><a class="dropdown-item" href="/register">register</a></li>
             {% endif %}
           </ul>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>
