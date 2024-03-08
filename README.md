@@ -10,10 +10,28 @@ The New Zealand Animal Pest Biosecurity Guide web application is designed to pro
 
 - Secure user authentication and registration.
 - Role-based access control for Pest Controllers, Staff, and Administrators.
+   - Pest Controller Role:
+      - Can view and update personal information.
+      - Can view the list of pests.
+
+   - Staff Role:
+      - Can view and update personal information.
+      - Can view Pest Controller's information.
+      - Can view the list of pests.
+      - May have additional privileges based on specific requirements.
+
+   - Administrator Role:
+      - Can view and update personal information.
+      - Can view and update Pest Controller's information.
+      - Can view the list of pests.
+      - Has full access to system administration and configuration.
+      - Highest level of access and control.
+
 - Attractive home page reflecting the New Zealand animal pest theme.
-- User profile management for Pest Controllers, Staff, and Administrators.
+- User management for Pest Controllers, Staff, and Administrators.
 - Comprehensive animal pest guide with detailed information and images.
 - Responsive design for optimal viewing on various devices.
+  
 
 ## Getting Started
 
