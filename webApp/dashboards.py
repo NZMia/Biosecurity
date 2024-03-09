@@ -9,6 +9,19 @@ import os
 
 dashboards  = Blueprint('dashboards', __name__)
 
+# Image upload
+def image_upload(image):
+  if request.files:
+    app = current_app 
+    filename = secure_filename(image.filename)
+    image.save(os.path.join(app.config['UPLOAD'], filename))
+    flash('Image uploaded successfully!', category='success')
+    return send_from_directory(app.config['UPLOAD'], filename)
+  else:
+    flash('No image selected', category='error')
+    return False
+
+# Admin dashboard (get Admin, update admin)
 @dashboards.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
@@ -48,6 +61,7 @@ def dashboard():
 
   return redirect(request.url)
 
+# Staff dashboard( get staff, update staff, delete staff, add staff)
 @dashboards.route('/manage_staff', methods=['GET', 'POST'] )
 @login_required
 def manage_staff():
@@ -134,7 +148,7 @@ def manage_staff():
 
     return redirect(request.url)
 
-# Pest controller dashboard 
+# Pest controller dashboard (get customer, update customer, delete customer, add customer)
 @dashboards.route('/manage_customer', methods=['GET', 'POST'])
 @login_required
 def manage_customer():
@@ -211,17 +225,6 @@ def manage_customer():
         flash(f'Employee creation failed: {e}', category='error')
 
   return redirect(request.url)
-
-def image_upload(image):
-  if request.files:
-    app = current_app 
-    filename = secure_filename(image.filename)
-    image.save(os.path.join(app.config['UPLOAD'], filename))
-    flash('Image uploaded successfully!', category='success')
-    return send_from_directory(app.config['UPLOAD'], filename)
-  else:
-    flash('No image selected', category='error')
-    return False
 
 @dashboards.route('/manage_pest', methods=['GET', 'POST'])
 @login_required
