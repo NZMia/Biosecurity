@@ -1,6 +1,13 @@
 # New Zealand Animal Pest Biosecurity Guide
 
-Welcome to the New Zealand Animal Pest Biosecurity Guide web application! This Flask Python application provides a comprehensive guide to animal pests in New Zealand, focusing on biosecurity measures. The application features a secure login system and role-based dashboards for Pest Controllers, Staff, and Administrators.
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=plastic)](https://github.com/prettier/prettier)  
+[![code commit rule: commitlint](https://img.shields.io/badge/code_commite-commitlint-ff69b4.svg?style=plastic)](https://github.com/conventional-changelog/commitlint)  
+
+Welcome to the New Zealand Animal Pest Biosecurity Guide web application! This Flask Python application provides a comprehensive guide to animal pests in New Zealand, focusing on biosecurity measures. The application features a secure login system and role-based dashboards for Pest Controllers, Staff, and Administrators. 
+
+
+![development: DONE](https://img.shields.io/badge/development-DONE-informational.svg?style=plastic)  
+Browser https://zhangm3a.pythonanywhere.com/
 
 ## Introduction
 
@@ -31,7 +38,7 @@ The New Zealand Animal Pest Biosecurity Guide web application is designed to pro
 - User management for Pest Controllers, Staff, and Administrators.
 - Comprehensive animal pest guide with detailed information and images.
 - Responsive design for optimal viewing on various devices.
-  
+
 
 ## Getting Started
 
@@ -70,6 +77,22 @@ Make sure you have the following installed:
 
 1. Open your web browser and go to [http://localhost:5000](http://localhost:5000).
 2. Explore the home page, and use the login or registration links to get started.
+
+#### login infromation for testing
+
+ Email                       | Role         | Password   |
+|----------------------------|--------------|------------|
+| admin@biosecurity.co.nz    | Admin        | admin123#  |
+| staff1@biosecurity.co.nz     | Staff        | staff123#  |
+| staff2@biosecurity.co.nz     | Staff        | staff123#   |
+| staff3@biosecurity.co.nz     | Staff        | staff123#   |
+| customer1@biosecurity.co.nz  | customer     | customer123#|
+| customer2@biosecurity.co.nz  | customer     | customer123#|
+| customer3@biosecurity.co.nz  | customer     | customer123#|
+| customer4@biosecurity.co.nz  | customer     | customer123#|
+| customer5@biosecurity.co.nz  | customer     | customer123#|
+
+
 
 ## File Structure
 
